@@ -1,0 +1,24 @@
+# Python cache / virtual environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# Environment variables
+.env
+
+# Database (if using SQLite local file)
+*.db
+
+# Uploads/media (optional, keep if you don’t want to push uploads)
+uploads/
+
+# VSCode / IDE settings
+.vscode/
+.idea/
+
+# OS junk files
+.DS_Store
+Thumbs.db
