@@ -3,25 +3,17 @@ from sqlalchemy.orm import Session
 from schemas import user as schemas
 import models.user as models
 from models.user import User
-from schemas.user import UserCreate, ShowUser
- # Assuming you have a hashing utility
-from auth.hashing import Hash
-
+from schemas.user import UserCreate, ShowUser, UserOut
+from models.auth.hashing import Hash
 from sqlalchemy.exc import IntegrityError
 from database import get_db
-from auth.hashing import Hash
 from fastapi.security import OAuth2PasswordRequestForm
-from auth.token import create_access_token
+from models.auth.token import create_access_token
 from dependencies.oauth2 import get_current_user
 
 router = APIRouter()
 
 
-
-
-@router.get("/users")
-def get_users(current_user: str = Depends(get_current_user)):
-    return {"users": ["Alice", "Bob", "Charlie"], "logged_in_as": current_user}
 
 
 @router.post("/login")
