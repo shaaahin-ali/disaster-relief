@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
 interface AuthModalProps {
   mode: "signin" | "signup" | null
@@ -18,6 +19,7 @@ interface AuthModalProps {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
 export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
+  const { login } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
   const [formData, setFormData] = useState({
@@ -52,8 +54,21 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
         }
 
         const data = await response.json()
-        localStorage.setItem("token", data.access_token)
-        localStorage.setItem("tokenType", data.token_type)
+
+        // Fetch user profile to get complete user data
+        const profileResponse = await fetch(`${API_BASE_URL}/users/me`, {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`,
+          },
+        })
+
+        if (profileResponse.ok) {
+          const userData = await profileResponse.json()
+          login(data.access_token, userData)
+        } else {
+          throw new Error("Failed to fetch user profile")
+        }
+
         onSuccess()
       } else {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
