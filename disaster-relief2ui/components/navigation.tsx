@@ -66,6 +66,15 @@ export function Navigation() {
             <Button
               variant="ghost"
               className="text-black/60 hover:text-black font-medium"
+              onClick={() => window.location.href = '/resources'}
+            >
+              <Heart className="w-4 h-4 mr-2" />
+              Resources
+            </Button>
+
+            <Button
+              variant="ghost"
+              className="text-black/60 hover:text-black font-medium"
               onClick={() => window.location.href = '/profile'}
             >
               <User className="w-4 h-4 mr-2" />

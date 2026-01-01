@@ -71,6 +71,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         username=user.username,
         email=user.email,
         password=hashed_pwd,
+        phone_number=user.phone_number,
         role=user.role
     )
     try:

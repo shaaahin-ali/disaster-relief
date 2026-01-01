@@ -8,6 +8,7 @@ interface User {
   email: string
   role: 'user' | 'volunteer'
   phone_number?: string
+  created_at?: string
 }
 
 interface AuthContextType {
@@ -43,6 +44,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const fetchUserProfile = async (authToken: string) => {
+    if (!authToken) {
+      setIsLoading(false)
+      return
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/users/me`, {
         headers: {
@@ -54,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData = await response.json()
         setUser(userData)
       } else {
+        console.warn('Token validation failed, clearing auth state')
         // Token might be invalid, clear it
         logout()
       }

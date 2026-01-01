@@ -4,6 +4,7 @@ class UserCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
+    phone_number: str = None
     role: Literal["user", "volunteer"] = "user"
 
 class ShowUser(BaseModel):

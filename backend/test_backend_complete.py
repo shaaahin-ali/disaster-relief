@@ -5,6 +5,7 @@ Tests all endpoints to ensure they work correctly
 import requests
 import json
 from typing import Optional
+import time
 
 BASE_URL = "http://localhost:8000"
 
@@ -16,11 +17,12 @@ def print_test(name: str):
 def test_signup():
     """Test user signup"""
     print_test("User Signup")
-    
-    # Test data
+
+    # Test data with unique timestamp
+    timestamp = str(int(time.time()))
     test_user = {
-        "username": "testuser123",
-        "email": "testuser123@example.com",
+        "username": f"testuser{timestamp}",
+        "email": f"testuser{timestamp}@example.com",
         "password": "testpass123",
         "phone_number": "1234567890",
         "role": "user"
@@ -31,25 +33,27 @@ def test_signup():
         print(f"Status: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
         
-        if response.status_code == 201:
-            print("✅ Signup successful!")
+        if response.status_code == 200:
+            print("SUCCESS: Signup successful!")
             return response.json()
         elif response.status_code == 400:
-            print(f"⚠️  {response.json().get('detail', 'Bad request')}")
+            print(f"WARNING: {response.json().get('detail', 'Bad request')}")
         else:
-            print(f"❌ Unexpected status: {response.status_code}")
+            print(f"ERROR: Unexpected status: {response.status_code}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
     
     return None
 
 def test_volunteer_signup():
     """Test volunteer signup"""
     print_test("Volunteer Signup")
-    
+
+    # Test data with unique timestamp
+    timestamp = str(int(time.time()))
     test_volunteer = {
-        "username": "volunteer123",
-        "email": "volunteer123@example.com",
+        "username": f"volunteer{timestamp}",
+        "email": f"volunteer{timestamp}@example.com",
         "password": "testpass123",
         "phone_number": "9876543210",
         "role": "volunteer"
@@ -60,15 +64,15 @@ def test_volunteer_signup():
         print(f"Status: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
         
-        if response.status_code == 201:
-            print("✅ Volunteer signup successful!")
+        if response.status_code == 200:
+            print("SUCCESS: Volunteer signup successful!")
             return response.json()
         elif response.status_code == 400:
-            print(f"⚠️  {response.json().get('detail', 'Bad request')}")
+            print(f"WARNING: {response.json().get('detail', 'Bad request')}")
         else:
-            print(f"❌ Unexpected status: {response.status_code}")
+            print(f"ERROR: Unexpected status: {response.status_code}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
     
     return None
 
@@ -86,13 +90,13 @@ def test_login(email: str, password: str):
         
         if response.status_code == 200:
             data = response.json()
-            print("✅ Login successful!")
+            print("SUCCESS: Login successful!")
             print(f"Token: {data.get('access_token', '')[:50]}...")
             return data.get('access_token')
         else:
-            print(f"❌ Login failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Login failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
@@ -109,26 +113,26 @@ def test_get_profile(token: str):
         print(f"Response: {json.dumps(response.json(), indent=2)}")
         
         if response.status_code == 200:
-            print("✅ Profile retrieved successfully!")
+            print("SUCCESS: Profile retrieved successfully!")
             return response.json()
         else:
-            print(f"❌ Failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
 def test_create_request(token: str):
     """Test creating a help request"""
     print_test("Create Help Request")
-    
+
     request_data = {
         "title": "Test Disaster Request",
         "description": "This is a test request for disaster relief",
         "location": "Test Location",
         "urgency_level": "high"
     }
-    
+
     try:
         response = requests.post(
             f"{BASE_URL}/request/request-help",
@@ -139,12 +143,12 @@ def test_create_request(token: str):
         print(f"Response: {json.dumps(response.json(), indent=2)}")
         
         if response.status_code == 201:
-            print("✅ Request created successfully!")
+            print("SUCCESS: Request created successfully!")
             return response.json()
         else:
-            print(f"❌ Failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
@@ -168,12 +172,12 @@ def test_get_all_requests(token: Optional[str] = None):
             print(f"Sample: {json.dumps(data[0], indent=2, default=str)}")
         
         if response.status_code == 200:
-            print("✅ Requests retrieved successfully!")
+            print("SUCCESS: Requests retrieved successfully!")
             return data
         else:
-            print(f"❌ Failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
@@ -190,12 +194,12 @@ def test_volunteer_apply(token: str, request_id: int):
         print(f"Response: {json.dumps(response.json(), indent=2)}")
         
         if response.status_code == 201:
-            print("✅ Application submitted successfully!")
+            print("SUCCESS: Application submitted successfully!")
             return response.json()
         else:
-            print(f"❌ Failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
@@ -214,12 +218,12 @@ def test_get_request_volunteers(token: str, request_id: int):
         print(f"Response: {json.dumps(data, indent=2, default=str)}")
         
         if response.status_code == 200:
-            print("✅ Volunteers retrieved successfully!")
+            print("SUCCESS: Volunteers retrieved successfully!")
             return data
         else:
-            print(f"❌ Failed: {response.json().get('detail', 'Unknown error')}")
+            print(f"ERROR: Failed: {response.json().get('detail', 'Unknown error')}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: Error: {e}")
     
     return None
 
@@ -227,17 +231,18 @@ def main():
     print("\n" + "="*60)
     print("BACKEND COMPREHENSIVE TEST SUITE")
     print("="*60)
-    
+
     # Test 1: Signup as user
     user_data = test_signup()
     if not user_data:
-        print("\n⚠️  Skipping further tests - signup failed")
+        print("\nWARNING: Skipping further tests - signup failed")
         return
-    
-    # Test 2: Login as user
-    user_token = test_login("testuser123@example.com", "testpass123")
+
+    # Test 2: Login as user (use the email from signup response)
+    user_email = user_data.get('email')
+    user_token = test_login(user_email, "testpass123")
     if not user_token:
-        print("\n⚠️  Skipping authenticated tests - login failed")
+        print("\nWARNING: Skipping authenticated tests - login failed")
         return
     
     # Test 3: Get profile
@@ -253,9 +258,10 @@ def main():
     
     # Test 6: Volunteer signup
     volunteer_data = test_volunteer_signup()
-    
-    # Test 7: Login as volunteer
-    volunteer_token = test_login("volunteer123@example.com", "testpass123")
+
+    # Test 7: Login as volunteer (use the email from signup response)
+    volunteer_email = volunteer_data.get('email') if volunteer_data else None
+    volunteer_token = test_login(volunteer_email, "testpass123") if volunteer_email else None
     
     if volunteer_token and request_id:
         # Test 8: Volunteer apply
@@ -275,7 +281,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\nTest interrupted by user")
     except Exception as e:
-        print(f"\n\n❌ Test suite error: {e}")
+        print(f"\n\nERROR: Test suite error: {e}")
         import traceback
         traceback.print_exc()
 

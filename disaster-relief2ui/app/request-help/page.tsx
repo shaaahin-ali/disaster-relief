@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/auth-context"
+import { useRouter } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,11 +10,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Upload, ArrowLeft } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { AlertCircle, Upload, ArrowLeft, MapPin } from "lucide-react"
 
 export default function RequestHelp() {
-  const { token } = useAuth()
+  const { token, user, isLoading } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -29,6 +29,13 @@ export default function RequestHelp() {
   })
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/')
+      return
+    }
+  }, [user, isLoading, router])
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -83,41 +90,57 @@ export default function RequestHelp() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Navigation />
 
-      <div className="pt-24 px-6">
-        <div className="max-w-2xl mx-auto">
+      <div className="pt-24 px-6 pb-12">
+        <div className="max-w-4xl mx-auto space-y-8">
           {/* Header */}
-          <div className="mb-8">
+          <div className="text-center space-y-6">
             <Button
               variant="ghost"
               onClick={() => router.back()}
-              className="mb-4 text-black/60 hover:text-black"
+              className="absolute left-6 top-24 text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
-            <h1 className="text-4xl md:text-5xl font-black mb-4 text-black">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Request Help
             </h1>
-            <p className="text-black/60 text-lg">
-              Describe your situation and connect with volunteers who can help
-            </p>
+              <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
+                Share your situation and connect with compassionate volunteers ready to help
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span>Community Support</span>
+              </div>
+              <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span>24/7 Assistance</span>
+              </div>
+            </div>
           </div>
 
-          <Card className="border-black/10">
-            <CardHeader>
-              <CardTitle className="text-2xl font-black text-black">
+          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <AlertCircle className="w-5 h-5 text-primary" />
+                </div>
                 Help Request Details
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {error && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-600" />
-                  <p className="text-red-800">{error}</p>
+                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-destructive" />
+                  <p className="text-destructive font-medium">{error}</p>
                 </div>
               )}
 
@@ -129,8 +152,9 @@ export default function RequestHelp() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Label htmlFor="title" className="text-black font-semibold">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-primary" />
                     Title *
                   </Label>
                   <Input
@@ -139,61 +163,67 @@ export default function RequestHelp() {
                     placeholder="Brief title for your request"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="mt-2 border-black/20 focus:border-black"
+                    className="bg-background border-input focus:border-primary transition-colors"
                     required
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="description" className="text-black font-semibold">
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-primary" />
                     Description *
                   </Label>
                   <Textarea
                     id="description"
-                    placeholder="Describe your situation in detail"
+                    placeholder="Describe your situation in detail. Include what kind of help you need and any specific requirements."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="mt-2 border-black/20 focus:border-black min-h-[120px]"
+                    className="bg-background border-input focus:border-primary transition-colors min-h-[120px] resize-none"
                     required
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="location" className="text-black font-semibold">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
                     Location *
                   </Label>
                   <Input
                     id="location"
                     type="text"
-                    placeholder="Your city or specific location"
+                      placeholder="Your city or specific address"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="mt-2 border-black/20 focus:border-black"
+                      className="bg-background border-input focus:border-primary transition-colors"
                     required
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="urgency" className="text-black font-semibold">
+                  <div className="space-y-2">
+                    <Label htmlFor="urgency" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-primary" />
                     Urgency Level
                   </Label>
                   <Select
                     value={formData.urgency_level}
                     onValueChange={(value) => setFormData({ ...formData, urgency_level: value })}
                   >
-                    <SelectTrigger className="mt-2 border-black/20 focus:border-black">
+                      <SelectTrigger className="bg-background border-input focus:border-primary transition-colors">
                       <SelectValue placeholder="Select urgency level" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Low - Can wait</SelectItem>
-                      <SelectItem value="medium">Medium - Soon</SelectItem>
-                      <SelectItem value="high">High - Urgent</SelectItem>
+                        <SelectItem value="low">🟢 Low - Can wait</SelectItem>
+                        <SelectItem value="medium">🟡 Medium - Soon</SelectItem>
+                        <SelectItem value="high">🔴 High - Urgent</SelectItem>
                     </SelectContent>
                   </Select>
+                  </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="photo" className="text-black font-semibold">
+                <div className="space-y-2">
+                  <Label htmlFor="photo" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                    <Upload className="w-4 h-4 text-primary" />
                     Photo (Optional)
                   </Label>
                   <div className="mt-2">
@@ -206,19 +236,28 @@ export default function RequestHelp() {
                     />
                     <label
                       htmlFor="photo"
-                      className="flex items-center justify-center w-full h-32 border-2 border-dashed border-black/20 rounded-lg cursor-pointer hover:border-black/40 transition-colors"
+                      className="flex items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 group"
                     >
                       {photoPreview ? (
+                        <div className="relative w-full h-full">
                         <img
                           src={photoPreview}
                           alt="Preview"
                           className="w-full h-full object-cover rounded-lg"
                         />
+                          <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Upload className="w-8 h-8 text-white" />
+                          </div>
+                        </div>
                       ) : (
-                        <div className="text-center">
-                          <Upload className="w-8 h-8 text-black/40 mx-auto mb-2" />
-                          <p className="text-black/60">Click to upload photo</p>
-                          <p className="text-black/40 text-sm">PNG, JPG up to 5MB</p>
+                        <div className="text-center space-y-3">
+                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                            <Upload className="w-6 h-6 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-foreground font-medium">Click to upload photo</p>
+                            <p className="text-muted-foreground text-sm">PNG, JPG up to 5MB</p>
+                          </div>
                         </div>
                       )}
                     </label>
@@ -228,9 +267,24 @@ export default function RequestHelp() {
                 <Button
                   type="submit"
                   disabled={loading || success}
-                  className="w-full bg-black text-white hover:bg-black/90 py-6 text-lg font-semibold"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-14 text-lg font-semibold rounded-xl"
                 >
-                  {loading ? "Creating Request..." : success ? "Request Created!" : "Create Help Request"}
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-3" />
+                      Creating Request...
+                    </>
+                  ) : success ? (
+                    <>
+                      <AlertCircle className="w-5 h-5 mr-3" />
+                      Request Created!
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="w-5 h-5 mr-3" />
+                      Create Help Request
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>

@@ -17,6 +17,8 @@ class ShowRequest(BaseModel):
     photo: Optional[str] = None
     timestamp: datetime
     user_id: int
+    user: Optional[dict] = None  # Include user information
+    volunteers: Optional[list] = None  # Include volunteer applications (for request owners only)
 
     class Config:
         from_attributes = True

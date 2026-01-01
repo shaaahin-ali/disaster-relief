@@ -8,6 +8,7 @@ import os
 
 from database import get_db
 from models.request import Request
+from models import user as models
 
 from schemas.request import ShowRequest
 from dependencies.oauth2 import get_current_user
@@ -51,13 +52,92 @@ def create_request(
     db.add(new_request)
     db.commit()
     db.refresh(new_request)
-    return new_request
+
+    # Create response with user information
+    user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    response_data = {
+        "id": new_request.id,
+        "title": new_request.title,
+        "description": new_request.description,
+        "location": new_request.location,
+        "urgency_level": new_request.urgency_level,
+        "photo": new_request.photo,
+        "timestamp": new_request.timestamp,
+        "user_id": new_request.user_id
+    }
+
+    if user:
+        response_data["user"] = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "phone_number": user.phone_number
+        }
+
+    return response_data
 
 # ✅ GET /request - List all help requests
 @router.get("/", response_model=List[ShowRequest])
-def get_all_requests(db: Session = Depends(get_db)):
+def get_all_requests(db: Session = Depends(get_db), current_user: UserOut = Depends(get_current_user)):
     requests = db.query(Request).all()
-    return requests
+
+    # Create response with user information and volunteer applications
+    response_data = []
+    for request in requests:
+        user = db.query(models.User).filter(models.User.id == request.user_id).first()
+        request_dict = {
+            "id": request.id,
+            "title": request.title,
+            "description": request.description,
+            "location": request.location,
+            "urgency_level": request.urgency_level,
+            "photo": request.photo,
+            "timestamp": request.timestamp,
+            "user_id": request.user_id
+        }
+
+        if user:
+            request_dict["user"] = {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "phone_number": user.phone_number
+            }
+
+        # Include volunteer applications for the request owner
+        if current_user.id == request.user_id:
+            from models.volunteer_application import VolunteerApplication
+            applications = db.query(VolunteerApplication).filter(
+                VolunteerApplication.request_id == request.id
+            ).all()
+
+            volunteers = []
+            for app in applications:
+                volunteer = db.query(models.User).filter(models.User.id == app.volunteer_id).first()
+                if volunteer:
+                    volunteers.append({
+                        "id": volunteer.id,
+                        "username": volunteer.username,
+                        "email": volunteer.email,
+                        "phone_number": volunteer.phone_number,
+                        "applied_at": app.applied_at.isoformat() if app.applied_at else None
+                    })
+
+            if volunteers:
+                request_dict["volunteers"] = volunteers
+
+        # Check if current volunteer has applied (for volunteer views)
+        if current_user.role == "volunteer" and current_user.id != request.user_id:
+            from models.volunteer_application import VolunteerApplication
+            existing_application = db.query(VolunteerApplication).filter_by(
+                volunteer_id=current_user.id,
+                request_id=request.id
+            ).first()
+            request_dict["has_applied"] = existing_application is not None
+
+        response_data.append(request_dict)
+
+    return response_data
 
 # ✅ GET /request/{id} - Get a single help request by ID
 @router.get("/{id}", response_model=ShowRequest)
@@ -66,3 +146,64 @@ def get_request(id: int, db: Session = Depends(get_db)):
     if not help_request:
         raise HTTPException(status_code=404, detail="Request not found")
     return help_request
+
+# ✅ GET /request/{id}/volunteers - Get volunteers for a request
+@router.get("/{id}/volunteers")
+def get_request_volunteers(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: UserOut = Depends(get_current_user)
+):
+    # Check if request exists
+    help_request = db.query(Request).filter(Request.id == id).first()
+    if not help_request:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    # Only the request owner can see volunteers
+    if help_request.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to view volunteers for this request")
+
+    # Get volunteers who applied to this request
+    from models.volunteer_application import VolunteerApplication
+    applications = db.query(VolunteerApplication).filter(
+        VolunteerApplication.request_id == id
+    ).all()
+
+    # Return volunteer info
+    volunteers = []
+    for app in applications:
+        volunteer = db.query(models.User).filter(models.User.id == app.volunteer_id).first()
+        if volunteer:
+            volunteers.append({
+                "id": volunteer.id,
+                "username": volunteer.username,
+                "email": volunteer.email
+            })
+
+    return volunteers
+
+# ✅ DELETE /request/{id} - Delete a request (only by owner)
+@router.delete("/{id}")
+def delete_request(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: UserOut = Depends(get_current_user)
+):
+    # Check if request exists
+    help_request = db.query(Request).filter(Request.id == id).first()
+    if not help_request:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    # Only the request owner can delete it
+    if help_request.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this request")
+
+    # Delete associated applications first
+    from models.volunteer_application import VolunteerApplication
+    db.query(VolunteerApplication).filter(VolunteerApplication.request_id == id).delete()
+
+    # Delete the request
+    db.delete(help_request)
+    db.commit()
+
+    return {"message": "Request deleted successfully"}
