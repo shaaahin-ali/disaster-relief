@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./disaster.db
+      - SECRET_KEY=your_secret_key_here
+    volumes:
+      - ./backend/disaster.db:/app/backend/disaster.db
+      - ./backend/uploads:/app/backend/uploads
+
+  frontend:
+    build:
+      context: ./disaster-relief2ui
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend

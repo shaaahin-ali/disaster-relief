@@ -51,7 +51,7 @@ def login(
 
 
 @router.get("/users", response_model=list[schemas.ShowUser])
-def get_users(db: Session = Depends(get_db)):
+def get_users(db: Session = Depends(get_db), current_user: schemas.UserOut = Depends(get_current_user)):
     users = db.query(models.User).all()
     return users
 

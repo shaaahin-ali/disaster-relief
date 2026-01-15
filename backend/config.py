@@ -15,8 +15,9 @@ class Settings:
     MAX_UPLOAD_SIZE: int = int(os.getenv("MAX_UPLOAD_SIZE", "5242880"))  # 5MB default
     ALLOWED_EXTENSIONS: set = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
     
-    # CORS - Allow common dev ports
-    CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175,http://127.0.0.1:5173,http://127.0.0.1:5174").split(",")
+    # CORS - Allow production and dev ports
+    _cors_raw = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001")
+    CORS_ORIGINS: list = [origin.strip() for origin in _cors_raw.split(",") if origin.strip()]
 
 settings = Settings()
 
