@@ -107,3 +107,5 @@ def delete_resource(
     # Remove the resource
     deleted_resource = resources_db.pop(resource_index)
     return {"message": "Resource deleted successfully"}
+
+
