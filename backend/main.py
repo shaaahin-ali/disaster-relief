@@ -26,7 +26,7 @@ app.add_middleware(SlowAPIMiddleware)
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["https://disaster-relief-lake.vercel.app","http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
