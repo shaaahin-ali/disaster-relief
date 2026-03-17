@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { ShieldCheck, ArrowRight, RefreshCw, Loader2, AlertTriangle, CheckCircle } from "lucide-react"
 import { Navigation } from "@/components/navigation"
 
-export default function VerifyEmail() {
+function VerifyEmailContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const email = searchParams.get("email")
@@ -175,5 +175,13 @@ export default function VerifyEmail() {
                 </Card>
             </div>
         </div>
+    )
+}
+
+export default function VerifyEmail() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-bg-base flex flex-col items-center justify-center text-accent-teal font-mono tracking-widest gap-4"><Loader2 className="w-8 h-8 animate-spin" /><span>LOADING PROTOCOL...</span></div>}>
+            <VerifyEmailContent />
+        </Suspense>
     )
 }
