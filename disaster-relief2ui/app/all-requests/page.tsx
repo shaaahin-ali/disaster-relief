@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Heart, MapPin, Clock, User, Search, Filter, Trash2, Phone, Users, CheckCircle } from "lucide-react"
+import { Heart, MapPin, Clock, User, Search, Filter, Trash2, Phone, Users, CheckCircle, AlertCircle } from "lucide-react"
 
 interface HelpRequest {
   id: number
@@ -39,7 +39,7 @@ export default function AllRequests() {
   const [urgencyFilter, setUrgencyFilter] = useState("all")
   const [applyingTo, setApplyingTo] = useState<number | null>(null)
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -277,8 +277,8 @@ export default function AllRequests() {
                             {request.title}
                           </h3>
                           <Badge className={`uppercase tracking-label font-mono bg-transparent border flex flex-row items-center justify-center gap-1 w-fit ${request.urgency_level === 'high' ? 'border-accent-red text-accent-red' :
-                              request.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
-                                'border-accent-teal text-accent-teal'
+                            request.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
+                              'border-accent-teal text-accent-teal'
                             }`}>
                             {request.urgency_level}
                           </Badge>
@@ -343,8 +343,8 @@ export default function AllRequests() {
                             onClick={() => applyToRequest(request.id)}
                             disabled={applyingTo === request.id || request.has_applied}
                             className={`flex-1 h-12 font-display font-bold transition-all duration-300 ${request.has_applied
-                                ? 'bg-accent-teal/20 text-accent-teal border border-accent-teal/30 cursor-not-allowed'
-                                : 'btn-primary'
+                              ? 'bg-accent-teal/20 text-accent-teal border border-accent-teal/30 cursor-not-allowed'
+                              : 'btn-primary'
                               }`}
                           >
                             {applyingTo === request.id ? (
