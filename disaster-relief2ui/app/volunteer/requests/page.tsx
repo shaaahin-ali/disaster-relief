@@ -133,49 +133,52 @@ export default function VolunteerRequests() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-accent-teal/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute top-[20%] left-0 w-[600px] h-[600px] bg-accent-blue/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none -translate-x-1/2" />
+
       <Navigation />
 
-      <div className="pt-24 px-6 pb-12">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="pt-24 px-6 pb-12 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-10">
           {/* Header Section */}
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-6 pt-4">
             <div className="flex items-center justify-center gap-3">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <HandHeart className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 bg-accent-teal/10 rounded-full flex items-center justify-center border border-accent-teal/20 shadow-glow-teal/30">
+                <HandHeart className="w-6 h-6 text-accent-teal" />
               </div>
-              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
             </div>
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Help Requests
+              <h1 className="text-4xl md:text-6xl font-display font-black text-text-primary tracking-hero mb-4">
+                Active <span className="text-accent-teal">Beacons</span>
               </h1>
-              <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
-                Browse available requests and offer your help to those in need. Your kindness can make a real difference.
+              <p className="text-text-secondary text-lg font-body max-w-2xl mx-auto">
+                Review local emergency signals. Deploy capabilities where they are most urgently needed.
               </p>
             </div>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-4 text-xs font-mono tracking-widest text-text-muted uppercase">
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>Community Impact</span>
+                <Users className="w-4 h-4 text-accent-teal" />
+                <span>Responder Mesh</span>
               </div>
-              <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+              <div className="w-1 h-1 bg-glass-border-strong rounded-full"></div>
               <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4" />
-                <span>Make a Difference</span>
+                <div className="w-2 h-2 bg-accent-teal rounded-full animate-pulse shadow-glow-teal"></div>
+                <span>Live Feed</span>
               </div>
             </div>
           </div>
 
           {/* Success Message */}
           {message && (
-            <Alert className={message.includes('success') ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950' : 'border-destructive bg-destructive/10'}>
+            <Alert className={message.includes('success') ? 'border-accent-teal/30 bg-accent-teal/10' : 'border-accent-red/30 bg-accent-red/10'}>
               {message.includes('success') ? (
-                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-4 w-4 text-accent-teal" />
               ) : (
-                <AlertCircle className="h-4 w-4 text-destructive" />
+                <AlertCircle className="h-4 w-4 text-accent-red" />
               )}
-              <AlertDescription className={message.includes('success') ? 'text-green-800 dark:text-green-300' : 'text-destructive'}>
+              <AlertDescription className={message.includes('success') ? 'text-accent-teal font-mono text-sm' : 'text-accent-red font-mono text-sm'}>
                 {message}
               </AlertDescription>
             </Alert>
@@ -185,104 +188,108 @@ export default function VolunteerRequests() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center space-y-4">
-                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-                <p className="text-muted-foreground">Loading help requests...</p>
+                <div className="w-12 h-12 border-4 border-accent-teal/20 border-t-accent-teal rounded-full animate-spin mx-auto"></div>
+                <p className="text-text-muted font-mono tracking-widest uppercase text-sm">Intercepting Signals...</p>
               </div>
             </div>
           ) : requests.length === 0 ? (
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center space-y-6">
-                <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto">
-                  <Heart className="w-10 h-10 text-muted-foreground" />
+            <Card className="glass-card border-dashed border-2 border-glass-border/50">
+              <CardContent className="p-16 text-center space-y-6">
+                <div className="w-20 h-20 bg-glass-02 rounded-full flex items-center justify-center mx-auto ring-1 ring-glass-border">
+                  <Sparkles className="w-10 h-10 text-text-muted" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">No Active Requests</h3>
-                  <p className="text-muted-foreground text-lg max-w-md mx-auto">
-                    There are currently no help requests available. Check back later or help spread the word about our platform!
+                  <h3 className="text-2xl font-display font-bold text-text-primary mb-3">No Active Beacons</h3>
+                  <p className="text-text-secondary text-lg max-w-md mx-auto mb-8">
+                    The network is currently stable. Maintain standby mode and monitor the feed for incoming requests.
                   </p>
                 </div>
-                <Button onClick={() => window.location.href = '/'} variant="outline" className="px-8">
-                  Go to Dashboard
+                <Button onClick={() => window.location.href = '/dashboard'} className="btn-secondary px-8">
+                  Return to Command Center
                 </Button>
               </CardContent>
             </Card>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {requests.map((request) => (
-                <Card key={request.id} className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
-                  <CardContent className="p-6 space-y-4">
+                <Card key={request.id} className="glass-card-elevated hover:bg-glass-02 transition-all duration-300 group flex flex-col h-full border-t-4 border-t-transparent hover:border-t-accent-teal">
+                  <CardContent className="p-6 space-y-4 flex flex-col h-full">
                     {/* Header with Priority Badge */}
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                    <div className="flex items-start justify-between min-h-[4rem]">
+                      <div className="flex-1 min-w-0 pr-2">
+                        <h3 className="text-xl font-display font-bold text-text-primary mb-3 line-clamp-2 group-hover:text-accent-teal transition-colors">
                           {request.title}
                         </h3>
-                        <Badge className={`border flex items-center gap-1 w-fit ${getUrgencyColor(request.urgency_level)}`}>
+                        <Badge className={`uppercase tracking-label font-mono bg-transparent border flex flex-row items-center justify-center gap-1 w-fit ${request.urgency_level === 'high' ? 'border-accent-red text-accent-red' :
+                            request.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
+                              'border-accent-teal text-accent-teal'
+                          }`}>
                           {getUrgencyIcon(request.urgency_level)}
-                          {request.urgency_level} priority
+                          {request.urgency_level}
                         </Badge>
                       </div>
                     </div>
 
                     {/* Description */}
-                    <p className="text-muted-foreground leading-relaxed line-clamp-3">
+                    <p className="text-text-secondary font-body leading-relaxed line-clamp-3 my-2 flex-grow">
                       {request.description}
                     </p>
 
                     {/* Request Details */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        <span>{request.location}</span>
+                    <div className="space-y-3 pt-3 mt-auto mb-4 border-t border-glass-border">
+                      <div className="flex items-center gap-3 text-sm font-mono text-text-muted">
+                        <MapPin className="w-4 h-4 text-accent-teal shrink-0" />
+                        <span className="truncate">{request.location}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span>{new Date(request.created_at).toLocaleDateString()}</span>
+                      <div className="flex items-center gap-3 text-sm font-mono text-text-muted">
+                        <Clock className="w-4 h-4 text-accent-teal shrink-0" />
+                        <span>{new Date(request.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(request.created_at).toLocaleDateString()}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <User className="w-4 h-4 text-primary" />
-                        <span>Request #{request.id}</span>
+                      <div className="flex items-center gap-3 text-sm font-mono text-text-muted">
+                        <User className="w-4 h-4 text-accent-teal shrink-0" />
+                        <span>Beacon #{request.id}</span>
                       </div>
                     </div>
 
                     {/* Image Preview */}
                     {request.photo && (
-                      <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted/50">
+                      <div className="relative w-full h-32 rounded-lg overflow-hidden border border-glass-border bg-glass-01 mb-4 shrink-0">
                         <img
                           src={`${API_BASE_URL}/uploads/${request.photo}`}
-                          alt="Request"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          alt="Beacon Visual Data"
+                          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                         />
                       </div>
                     )}
 
                     {/* Action Button */}
-                    <Button
-                      onClick={() => applyToRequest(request.id)}
-                      disabled={applyingTo === request.id || appliedRequests.has(request.id) || request.has_applied}
-                      className={`w-full h-12 group-hover:shadow-lg transition-all duration-300 ${
-                        appliedRequests.has(request.id) || request.has_applied
-                          ? 'bg-green-600 hover:bg-green-700 text-white'
-                          : 'bg-primary hover:bg-primary/90 text-primary-foreground'
-                      }`}
-                    >
-                      {appliedRequests.has(request.id) || request.has_applied ? (
-                        <>
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Offered
-                        </>
-                      ) : applyingTo === request.id ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
-                          Applying...
-                        </>
-                      ) : (
-                        <>
-                          <Heart className="w-4 h-4 mr-2" />
-                          Offer Help
-                        </>
-                      )}
-                    </Button>
+                    <div className="mt-auto shrink-0 pt-2">
+                      <Button
+                        onClick={() => applyToRequest(request.id)}
+                        disabled={applyingTo === request.id || appliedRequests.has(request.id) || request.has_applied}
+                        className={`w-full h-12 font-display font-bold transition-all duration-300 ${appliedRequests.has(request.id) || request.has_applied
+                            ? 'bg-accent-teal/20 text-accent-teal border border-accent-teal/30 cursor-not-allowed'
+                            : 'btn-primary'
+                          }`}
+                      >
+                        {appliedRequests.has(request.id) || request.has_applied ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <CheckCircle className="w-5 h-5" />
+                            RESPONSE TRANSMITTED
+                          </span>
+                        ) : applyingTo === request.id ? (
+                          <span className="flex items-center justify-center gap-2 font-mono text-sm tracking-widest uppercase text-bg-void">
+                            <div className="w-5 h-5 border-2 border-bg-void/50 border-t-bg-void rounded-full animate-spin" />
+                            Connecting...
+                          </span>
+                        ) : (
+                          <span className="flex items-center justify-center gap-2">
+                            <Heart className="w-5 h-5" />
+                            DEPLOY SUPPORT
+                          </span>
+                        )}
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}

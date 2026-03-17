@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useRouter } from "next/navigation"
 
 interface AuthModalProps {
   mode: "signin" | "signup" | null
@@ -86,6 +87,7 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
 
         const data = await response.json()
         localStorage.setItem("userId", data.id)
+        router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
         onSuccess()
       }
     } catch (err) {
@@ -95,22 +97,24 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
     }
   }
 
+  const router = useRouter()
+
   return (
     <Dialog open={mode !== null} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white border border-black/10 rounded-2xl shadow-lg">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-black text-black">
+      <DialogContent className="sm:max-w-md glass-card border flex flex-col items-center">
+        <DialogHeader className="w-full text-center mb-2">
+          <DialogTitle className="text-3xl font-display font-black text-text-primary tracking-hero">
             {mode === "signin" ? "Welcome Back" : "Join Sahay"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5 py-6">
+        <form onSubmit={handleSubmit} className="w-full space-y-5">
           {error && (
-            <div className="p-4 rounded-lg bg-black/5 border border-black/10 text-sm text-black/70">{error}</div>
+            <div className="p-4 rounded-lg bg-accent-red/10 border border-accent-red/20 text-sm text-accent-red">{error}</div>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-black font-semibold text-sm">
+          <div className="space-y-2 w-full">
+            <Label htmlFor="email" className="text-text-primary font-semibold text-sm tracking-label uppercase">
               Email
             </Label>
             <Input
@@ -119,15 +123,15 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
               placeholder="you@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-black focus:ring-1 focus:ring-black rounded-lg"
+              className="bg-glass-02 border-glass-border-strong text-text-primary placeholder:text-text-muted focus:border-accent-teal focus:ring-1 focus:ring-accent-teal rounded-lg transition-all"
               required
             />
           </div>
 
           {mode === "signup" && (
             <>
-              <div className="space-y-2">
-                <Label htmlFor="username" className="text-black font-semibold text-sm">
+              <div className="space-y-2 w-full">
+                <Label htmlFor="username" className="text-text-primary font-semibold text-sm tracking-label uppercase">
                   Username
                 </Label>
                 <Input
@@ -136,13 +140,13 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
                   placeholder="your_username"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-black focus:ring-1 focus:ring-black rounded-lg"
+                  className="bg-glass-02 border-glass-border-strong text-text-primary placeholder:text-text-muted focus:border-accent-teal focus:ring-1 focus:ring-accent-teal rounded-lg transition-all"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-black font-semibold text-sm">
+              <div className="space-y-2 w-full">
+                <Label htmlFor="phone" className="text-text-primary font-semibold text-sm tracking-label uppercase">
                   Phone Number
                 </Label>
                 <Input
@@ -151,20 +155,20 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
                   placeholder="+1 (555) 000-0000"
                   value={formData.phone_number}
                   onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                  className="bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-black focus:ring-1 focus:ring-black rounded-lg"
+                  className="bg-glass-02 border-glass-border-strong text-text-primary placeholder:text-text-muted focus:border-accent-teal focus:ring-1 focus:ring-accent-teal rounded-lg transition-all"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="role" className="text-black font-semibold text-sm">
+              <div className="space-y-2 w-full">
+                <Label htmlFor="role" className="text-text-primary font-semibold text-sm tracking-label uppercase">
                   I am a
                 </Label>
                 <select
                   id="role"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-white border border-black/10 text-black focus:border-black focus:ring-1 focus:ring-black outline-none transition-all"
+                  className="w-full px-4 py-2 rounded-lg bg-bg-elevated border border-glass-border-strong text-text-primary focus:border-accent-teal focus:ring-1 focus:ring-accent-teal outline-none transition-all"
                   required
                 >
                   <option value="user">Person Needing Help</option>
@@ -174,8 +178,8 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
             </>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-black font-semibold text-sm">
+          <div className="space-y-2 w-full">
+            <Label htmlFor="password" className="text-text-primary font-semibold text-sm tracking-label uppercase">
               Password
             </Label>
             <Input
@@ -184,17 +188,17 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
               placeholder="••••••••"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="bg-white border border-black/10 text-black placeholder:text-black/40 focus:border-black focus:ring-1 focus:ring-black rounded-lg"
+              className="bg-glass-02 border-glass-border-strong text-text-primary placeholder:text-text-muted focus:border-accent-teal focus:ring-1 focus:ring-accent-teal rounded-lg transition-all"
               required
               minLength={6}
             />
-            {mode === "signup" && <p className="text-xs text-black/50 mt-1">At least 6 characters</p>}
+            {mode === "signup" && <p className="text-xs text-text-muted mt-1">At least 6 characters</p>}
           </div>
 
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white hover:bg-black/90 py-6 rounded-lg font-semibold transition-all"
+            className="w-full btn-primary text-bg-void hover:shadow-glow-teal py-6 rounded-full font-bold transition-all text-base"
           >
             {loading ? (
               <>
@@ -209,12 +213,12 @@ export function AuthModal({ mode, onClose, onSuccess }: AuthModalProps) {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-black/60">
+        <p className="text-center text-sm text-text-muted">
           {mode === "signin" ? "Don't have an account? " : "Already have an account? "}
           <button
             type="button"
             onClick={onClose}
-            className="text-black font-semibold hover:text-black/70 transition-colors"
+            className="text-text-primary font-semibold hover:text-accent-teal transition-colors"
           >
             {mode === "signin" ? "Sign up" : "Sign in"}
           </button>

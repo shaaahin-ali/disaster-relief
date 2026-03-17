@@ -112,102 +112,114 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 left-0 w-[800px] h-[600px] bg-accent-teal/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-accent-blue/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 translate-y-1/3" />
+
       <Navigation />
 
-      <div className="pt-24 px-6 pb-12">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <div className="pt-24 px-6 pb-12 relative z-10">
+        <div className="max-w-6xl mx-auto space-y-12">
           {/* Header */}
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Welcome back, {user.username}
+          <div className="text-center space-y-4 pt-8">
+            <h1 className="text-4xl md:text-6xl font-display font-black text-text-primary tracking-hero">
+              Welcome back, <span className="text-accent-teal">{user.username}</span>
             </h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="text-text-secondary text-xl font-body max-w-2xl mx-auto">
               Manage your help requests and connect with our amazing community of volunteers
             </p>
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Actions (Bento Grid) */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/request-help'}>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Plus className="w-7 h-7 text-primary" />
+            <Card className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/request-help'}>
+              <CardContent className="p-8 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-accent-teal/10 rounded-xl flex items-center justify-center group-hover:bg-accent-teal/20 transition-colors">
+                    <Plus className="w-7 h-7 text-accent-teal" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Request Help</h3>
-                    <p className="text-muted-foreground">Create a new help request</p>
+                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-teal transition-colors">Request Help</h3>
+                    <p className="text-text-muted text-sm mt-1">Create a new request</p>
                   </div>
                 </div>
-                <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300">
-                  Create Request
-                </Button>
+                <div className="mt-auto">
+                  <Button className="w-full h-12 btn-primary border-none shadow-glow-teal/50 truncate">
+                    Create Request
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/all-requests'}>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Heart className="w-7 h-7 text-primary" />
+            <Card className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/all-requests'}>
+              <CardContent className="p-8 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-accent-amber/10 rounded-xl flex items-center justify-center group-hover:bg-accent-amber/20 transition-colors">
+                    <Heart className="w-7 h-7 text-accent-amber" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Browse Help</h3>
-                    <p className="text-muted-foreground">See all help requests</p>
+                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-amber transition-colors">Browse Help</h3>
+                    <p className="text-text-muted text-sm mt-1">See active requests</p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full h-12 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 transition-all duration-300">
-                  View Community
-                </Button>
+                <div className="mt-auto">
+                  <Button variant="outline" className="w-full h-12 btn-secondary border-accent-amber/30 text-accent-amber hover:bg-accent-amber/10 hover:text-accent-amber">
+                    View Community
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/resources'}>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Package className="w-7 h-7 text-primary" />
+            <Card className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/resources'}>
+              <CardContent className="p-8 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-accent-blue/10 rounded-xl flex items-center justify-center group-hover:bg-accent-blue/20 transition-colors">
+                    <Package className="w-7 h-7 text-accent-blue" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Resources</h3>
-                    <p className="text-muted-foreground">Share or request resources</p>
+                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-blue transition-colors">Resources</h3>
+                    <p className="text-text-muted text-sm mt-1">Share/request items</p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full h-12 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 transition-all duration-300">
-                  Browse Resources
-                </Button>
+                <div className="mt-auto">
+                  <Button variant="outline" className="w-full h-12 btn-secondary border-accent-blue/30 text-accent-blue hover:bg-accent-blue/10 hover:text-accent-blue">
+                    Browse Resources
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/profile'}>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Users className="w-7 h-7 text-primary" />
+            <Card className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer" onClick={() => window.location.href = '/profile'}>
+              <CardContent className="p-8 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-accent-teal/10 rounded-xl flex items-center justify-center group-hover:bg-accent-teal/20 transition-colors">
+                    <User className="w-7 h-7 text-accent-teal" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">My Profile</h3>
-                    <p className="text-muted-foreground">Manage your account</p>
+                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-teal transition-colors">My Profile</h3>
+                    <p className="text-text-muted text-sm mt-1">Manage settings</p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full h-12 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 transition-all duration-300">
-                  View Profile
-                </Button>
+                <div className="mt-auto">
+                  <Button variant="outline" className="w-full h-12 btn-secondary border-accent-teal/30 text-accent-teal hover:bg-accent-teal/10 hover:text-accent-teal">
+                    View Profile
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* User's Help Requests */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-glass-border pb-4">
               <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">My Help Requests</h2>
-                <p className="text-muted-foreground">Track and manage your active requests</p>
+                <h2 className="text-3xl font-display font-bold text-text-primary mb-2">My Help Requests</h2>
+                <p className="text-text-secondary font-body">Track and manage your active requests</p>
               </div>
               <Button
                 onClick={() => window.location.href = '/request-help'}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 px-6"
+                className="btn-primary h-12 px-6"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 New Request
@@ -217,27 +229,27 @@ export default function Dashboard() {
             {loading ? (
               <div className="flex items-center justify-center py-20">
                 <div className="text-center space-y-4">
-                  <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-                  <p className="text-muted-foreground">Loading your requests...</p>
+                  <div className="w-12 h-12 border-4 border-accent-teal/20 border-t-accent-teal rounded-full animate-spin mx-auto"></div>
+                  <p className="text-text-muted font-mono tracking-widest uppercase">Initializing Secure Link...</p>
                 </div>
               </div>
             ) : requests.length === 0 ? (
-              <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-                <CardContent className="p-12 text-center space-y-6">
-                  <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto">
-                    <AlertCircle className="w-10 h-10 text-muted-foreground" />
+              <Card className="glass-card border-dashed border-2 border-glass-border/50">
+                <CardContent className="p-16 text-center space-y-6">
+                  <div className="w-20 h-20 bg-glass-02 rounded-full flex items-center justify-center mx-auto ring-1 ring-glass-border">
+                    <AlertCircle className="w-10 h-10 text-text-muted" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-2">No Requests Yet</h3>
-                    <p className="text-muted-foreground text-lg max-w-md mx-auto mb-6">
-                      You haven't created any help requests yet. Start by creating your first request to connect with our community of volunteers.
+                    <h3 className="text-2xl font-display font-bold text-text-primary mb-3">No Active Requests</h3>
+                    <p className="text-text-secondary text-lg max-w-md mx-auto mb-8">
+                      You haven't broadcasted any requests on the network. Start by creating a secure beacon for help.
                     </p>
                     <Button
                       onClick={() => window.location.href = '/request-help'}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 px-8"
+                      className="btn-primary h-12 px-8"
                     >
                       <Plus className="w-5 h-5 mr-2" />
-                      Create Your First Request
+                      Initialize Request
                     </Button>
                   </div>
                 </CardContent>
@@ -245,57 +257,62 @@ export default function Dashboard() {
             ) : (
               <div className="grid gap-6">
                 {requests.map((request) => (
-                  <Card key={request.id} className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+                  <Card key={request.id} className="glass-card-elevated hover:bg-glass-02 transition-all duration-300">
                     <CardContent className="p-6">
-                      <div className="flex items-start justify-between gap-6">
-                        <div className="flex-1 space-y-4">
+                      <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+                        <div className="flex-1 space-y-4 w-full">
                           <div className="flex items-start gap-4">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-xl font-bold text-foreground line-clamp-1">{request.title}</h3>
-                                <Badge className={`border ${getUrgencyColor(request.urgency_level)}`}>
-                                  {request.urgency_level} priority
+                                <h3 className="text-2xl font-display font-bold text-text-primary line-clamp-1">{request.title}</h3>
+                                <Badge className={`uppercase tracking-label font-mono bg-transparent border ${request.urgency_level === 'high' ? 'border-accent-red text-accent-red' :
+                                    request.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
+                                      'border-accent-teal text-accent-teal'
+                                  }`}>
+                                  {request.urgency_level} Priority
                                 </Badge>
                               </div>
-                              <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-2">{request.description}</p>
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <MapPin className="w-4 h-4 text-primary" />
+                              <p className="text-text-secondary leading-relaxed mb-4 line-clamp-2">{request.description}</p>
+
+                              <div className="flex flex-wrap items-center gap-4 text-sm font-mono text-text-muted">
+                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
+                                  <MapPin className="w-4 h-4 text-accent-teal" />
                                   <span>{request.location}</span>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                  <Clock className="w-4 h-4 text-primary" />
+                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
+                                  <Clock className="w-4 h-4 text-accent-teal" />
                                   <span>{new Date(request.created_at).toLocaleDateString()}</span>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                  <User className="w-4 h-4 text-primary" />
-                                  <span>Request #{request.id}</span>
+                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
+                                  <User className="w-4 h-4 text-accent-teal" />
+                                  <span>ID #{request.id}</span>
                                 </div>
                               </div>
                             </div>
+
                             {request.photo && (
                               <div className="flex-shrink-0">
                                 <img
                                   src={`${API_BASE_URL}/uploads/${request.photo}`}
-                                  alt="Request"
-                                  className="w-24 h-24 object-cover rounded-lg border border-border shadow-sm"
+                                  alt="Request evidence"
+                                  className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border border-glass-border shadow-card"
                                 />
                               </div>
                             )}
                           </div>
 
-                          {/* Contact Information for Owner */}
+                          {/* Contact Info */}
                           {request.user && (
-                            <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2">
-                              <p className="text-sm font-medium text-primary">Your Contact Information</p>
-                              <div className="grid grid-cols-2 gap-2 text-sm">
-                                <p className="text-foreground">
-                                  <Mail className="w-3 h-3 inline mr-1" />
+                            <div className="bg-glass-01 border border-glass-border rounded-xl p-4 mt-4">
+                              <p className="text-xs uppercase tracking-label font-bold text-accent-teal mb-3">Origin Contact Data</p>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm font-mono text-text-secondary">
+                                <p className="flex items-center">
+                                  <Mail className="w-4 h-4 mr-2 text-text-muted" />
                                   {request.user.email}
                                 </p>
                                 {request.user.phone_number && (
-                                  <p className="text-foreground">
-                                    <Phone className="w-3 h-3 inline mr-1" />
+                                  <p className="flex items-center">
+                                    <Phone className="w-4 h-4 mr-2 text-text-muted" />
                                     {request.user.phone_number}
                                   </p>
                                 )}
@@ -303,79 +320,72 @@ export default function Dashboard() {
                             </div>
                           )}
 
-                          {/* Volunteer Applications */}
+                          {/* Volunteers */}
                           {request.volunteers && request.volunteers.length > 0 && (
-                            <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-3 space-y-3">
-                              <p className="text-sm font-medium text-green-800 dark:text-green-200 flex items-center gap-2">
-                                <Heart className="w-4 h-4" />
-                                Volunteers Who Offered Help ({request.volunteers.length})
+                            <div className="bg-gradient-to-r from-accent-teal/10 to-transparent border-l-4 border-accent-teal rounded-r-xl p-4 mt-4">
+                              <p className="text-sm font-bold text-text-primary flex items-center gap-2 mb-3">
+                                <Users className="w-4 h-4 text-accent-teal" />
+                                Active Responders ({request.volunteers.length})
                               </p>
                               <div className="space-y-2">
                                 {request.volunteers.map((volunteer) => (
-                                  <div key={volunteer.id} className="bg-white dark:bg-gray-800 rounded-md p-3 border border-green-100 dark:border-green-800">
-                                    <div className="flex items-start justify-between">
-                                      <div className="flex-1">
-                                        <p className="font-medium text-foreground text-sm">{volunteer.username}</p>
-                                        <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground mt-1">
-                                          <p>
-                                            <Mail className="w-3 h-3 inline mr-1" />
+                                  <div key={volunteer.id} className="bg-glass-01 border border-glass-border rounded-lg p-3">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                      <div>
+                                        <p className="font-bold text-text-primary text-sm flex items-center gap-2">
+                                          {volunteer.username}
+                                          <Badge variant="outline" className="text-[10px] h-4 bg-accent-teal/10 text-accent-teal border-accent-teal/20">VERIFIED</Badge>
+                                        </p>
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-text-muted mt-1.5">
+                                          <p className="flex items-center">
+                                            <Mail className="w-3 h-3 mr-1.5" />
                                             {volunteer.email}
                                           </p>
                                           {volunteer.phone_number && (
-                                            <p>
-                                              <Phone className="w-3 h-3 inline mr-1" />
+                                            <p className="flex items-center">
+                                              <Phone className="w-3 h-3 mr-1.5" />
                                               {volunteer.phone_number}
                                             </p>
                                           )}
                                         </div>
-                                        {volunteer.applied_at && (
-                                          <p className="text-xs text-muted-foreground mt-1">
-                                            Applied: {new Date(volunteer.applied_at).toLocaleString()}
-                                          </p>
-                                        )}
                                       </div>
-                                      <div className="ml-2">
-                                        <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                                          <User className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                      {volunteer.applied_at && (
+                                        <div className="text-xs font-mono text-text-muted">
+                                          Match TS: {new Date(volunteer.applied_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
-                                      </div>
+                                      )}
                                     </div>
                                   </div>
                                 ))}
                               </div>
                             </div>
                           )}
+                        </div>
 
-                          <div className="flex items-center justify-between pt-4 border-t border-border">
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span>
-                                Status: <span className="text-primary font-medium">Active</span>
-                              </span>
-                              {request.volunteers && request.volunteers.length > 0 && (
-                                <span className="flex items-center gap-1">
-                                  <Users className="w-3 h-3" />
-                                  {request.volunteers.length} volunteer{request.volunteers.length > 1 ? 's' : ''} applied
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40"
-                              >
-                                View Details
-                              </Button>
-                              <Button
-                                onClick={() => deleteRequest(request.id)}
-                                variant="destructive"
-                                size="sm"
-                                className="bg-destructive hover:bg-destructive/90"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
+                        {/* Actions Col */}
+                        <div className="flex md:flex-col gap-3 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-glass-border md:pl-6 justify-between md:justify-start">
+                          <div className="text-center md:text-right w-full mb-2 hidden md:block">
+                            <Badge className="bg-glass-02 text-text-primary border-glass-border">
+                              ACTIVE
+                            </Badge>
                           </div>
+
+                          <Button
+                            variant="outline"
+                            className="bg-transparent border-glass-border-strong text-text-primary hover:bg-glass-02 flex-1 md:flex-none"
+                            onClick={() => window.location.href = `/request-help?id=${request.id}`}
+                          >
+                            Edit Beacon
+                          </Button>
+
+                          <Button
+                            onClick={() => deleteRequest(request.id)}
+                            variant="ghost"
+                            className="bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-white border border-accent-red/20 flex-1 md:flex-none"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Deactivate
+                          </Button>
                         </div>
                       </div>
                     </CardContent>

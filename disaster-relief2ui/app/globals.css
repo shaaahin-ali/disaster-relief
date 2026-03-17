@@ -3,82 +3,100 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* SAHAY DESIGN TOKENS */
 :root {
-  /* Modern Framer-inspired color palette */
-  --background: oklch(0.99 0.005 264);
-  --foreground: oklch(0.2 0.02 264);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 264);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 264);
-  --primary: oklch(0.6 0.15 264);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0.005 264);
-  --secondary-foreground: oklch(0.2 0.02 264);
-  --muted: oklch(0.94 0.005 264);
-  --muted-foreground: oklch(0.45 0.01 264);
-  --accent: oklch(0.6 0.15 264);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.62 0.22 25);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0.005 264);
-  --input: oklch(0.96 0.005 264);
-  --ring: oklch(0.6 0.15 264);
-  --chart-1: oklch(0.6 0.15 264);
-  --chart-2: oklch(0.7 0.12 320);
-  --chart-3: oklch(0.75 0.1 200);
-  --chart-4: oklch(0.8 0.08 150);
-  --chart-5: oklch(0.85 0.05 100);
+  /* Backgrounds */
+  --bg-void: #050508;
+  /* deepest black */
+  --bg-base: #0a0b0f;
+  /* page background */
+  --bg-surface: #0f1118;
+  /* card base */
+  --bg-elevated: #161923;
+  /* elevated card */
+
+  /* Glass layers */
+  --glass-01: rgba(255, 255, 255, 0.03);
+  --glass-02: rgba(255, 255, 255, 0.06);
+  --glass-03: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-strong: rgba(255, 255, 255, 0.15);
+
+  /* Brand Accents */
+  --accent-teal: #2DD4BF;
+  /* primary CTA, success, safe */
+  --accent-teal-dim: rgba(45, 212, 191, 0.15);
+  --accent-amber: #F59E0B;
+  /* warning, active relief */
+  --accent-amber-dim: rgba(245, 158, 11, 0.12);
+  --accent-red: #EF4444;
+  /* emergency, critical */
+  --accent-red-dim: rgba(239, 68, 68, 0.12);
+  --accent-blue: #60A5FA;
+  /* data, information */
+
+  /* Ambient glow colours (for moving bg) */
+  --glow-primary: rgba(45, 212, 191, 0.08);
+  --glow-secondary: rgba(16, 185, 129, 0.05);
+  --glow-warm: rgba(245, 158, 11, 0.04);
+
+  /* Typography */
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #475569;
+  --text-accent: #2DD4BF;
+
+  /* Shadows */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 24px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow-teal: 0 0 40px rgba(45, 212, 191, 0.2);
+
+  /* Letter spacing */
+  --tracking-hero: -0.03em;
+  --tracking-label: 0.08em;
+  --tracking-data: 0.02em;
+
+  /* Map Shadcn / Original theme variables into new UI (forced dark mode) */
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-teal);
+  --primary-foreground: var(--bg-void);
+  --secondary: var(--bg-elevated);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--glass-02);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--accent-teal);
+  --accent-foreground: var(--bg-void);
+  --destructive: var(--accent-red);
+  --destructive-foreground: var(--text-primary);
+  --border: var(--glass-border);
+  --input: var(--glass-border);
+  --ring: var(--accent-teal);
+
+  --chart-1: var(--accent-teal);
+  --chart-2: var(--accent-amber);
+  --chart-3: var(--accent-red);
+  --chart-4: var(--accent-blue);
+  --chart-5: #a855f7;
+
   --radius: 0.75rem;
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.15 0.02 264);
-  --sidebar-primary: oklch(0.6 0.15 264);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.96 0.005 264);
-  --sidebar-accent-foreground: oklch(0.2 0.02 264);
-  --sidebar-border: oklch(0.92 0.005 264);
-  --sidebar-ring: oklch(0.6 0.15 264);
+
+  --sidebar: var(--bg-surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--accent-teal);
+  --sidebar-primary-foreground: var(--bg-void);
+  --sidebar-accent: var(--bg-elevated);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--glass-border);
+  --sidebar-ring: var(--accent-teal);
 }
 
-.dark {
-  /* Modern dark mode with better contrast */
-  --background: oklch(0.08 0.005 264);
-  --foreground: oklch(0.95 0.005 264);
-  --card: oklch(0.12 0.01 264);
-  --card-foreground: oklch(0.95 0.005 264);
-  --popover: oklch(0.12 0.01 264);
-  --popover-foreground: oklch(0.95 0.005 264);
-  --primary: oklch(0.7 0.15 264);
-  --primary-foreground: oklch(0.08 0.005 264);
-  --secondary: oklch(0.18 0.01 264);
-  --secondary-foreground: oklch(0.95 0.005 264);
-  --muted: oklch(0.22 0.01 264);
-  --muted-foreground: oklch(0.65 0.01 264);
-  --accent: oklch(0.7 0.15 264);
-  --accent-foreground: oklch(0.08 0.005 264);
-  --destructive: oklch(0.62 0.22 25);
-  --destructive-foreground: oklch(0.95 0.005 264);
-  --border: oklch(0.25 0.01 264);
-  --input: oklch(0.18 0.01 264);
-  --ring: oklch(0.7 0.15 264);
-  --chart-1: oklch(0.7 0.15 264);
-  --chart-2: oklch(0.65 0.12 320);
-  --chart-3: oklch(0.6 0.1 200);
-  --chart-4: oklch(0.55 0.08 150);
-  --chart-5: oklch(0.5 0.05 100);
-  --sidebar: oklch(0.12 0.01 264);
-  --sidebar-foreground: oklch(0.95 0.005 264);
-  --sidebar-primary: oklch(0.7 0.15 264);
-  --sidebar-primary-foreground: oklch(0.08 0.005 264);
-  --sidebar-accent: oklch(0.18 0.01 264);
-  --sidebar-accent-foreground: oklch(0.95 0.005 264);
-  --sidebar-border: oklch(0.25 0.01 264);
-  --sidebar-ring: oklch(0.7 0.15 264);
-}
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -103,10 +121,12 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: calc(var(--radius) - 1px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 2px);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -115,14 +135,44 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-bg-void: var(--bg-void);
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-glass-01: var(--glass-01);
+  --color-glass-02: var(--glass-02);
+  --color-glass-03: var(--glass-03);
+  --color-glass-border: var(--glass-border);
+  --color-glass-border-strong: var(--glass-border-strong);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-teal-dim: var(--accent-teal-dim);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-amber-dim: var(--accent-amber-dim);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-dim: var(--accent-red-dim);
+  --color-accent-blue: var(--accent-blue);
+  --color-glow-primary: var(--glow-primary);
+  --color-glow-secondary: var(--glow-secondary);
+  --color-glow-warm: var(--glow-warm);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-accent: var(--text-accent);
+
+  --shadow-glass: var(--shadow-glass);
+  --shadow-card: var(--shadow-card);
+  --shadow-glow-teal: var(--shadow-glow-teal);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  body,
+  html {
+    @apply bg-bg-base text-text-primary selection:bg-accent-teal/30 selection:text-white;
   }
 
   h1,
@@ -131,11 +181,10 @@
   h4,
   h5,
   h6 {
-    @apply font-sans font-bold tracking-tight;
+    @apply font-bold tracking-tight text-white;
   }
 }
 
-/* Smooth animations and transitions */
 @layer utilities {
   .fade-in {
     @apply animate-in fade-in duration-1000;
@@ -147,5 +196,99 @@
 
   .smooth-transition {
     @apply transition-all duration-300 ease-out;
+  }
+
+  /* GLASSMORPHISM UTILITIES */
+  .glass-card {
+    background: var(--glass-01);
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Elevated variant */
+  .glass-card-elevated {
+    background: var(--glass-02);
+    border-color: var(--glass-border-strong);
+  }
+
+  /* Accent tinted variant */
+  .glass-card-teal {
+    background: linear-gradient(135deg,
+        rgba(45, 212, 191, 0.05),
+        rgba(45, 212, 191, 0.02));
+    border-color: rgba(45, 212, 191, 0.2);
+  }
+
+  .btn-primary {
+    background: var(--accent-teal);
+    color: var(--bg-void);
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    box-shadow: var(--shadow-glow-teal);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border-strong);
+    padding: 14px 28px;
+    border-radius: 100px;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--glass-02);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+@keyframes drift-1 {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(60px, -40px) scale(1.1);
+  }
+}
+
+@keyframes drift-2 {
+  from {
+    transform: translate(0, 0) scale(1.1);
+  }
+
+  to {
+    transform: translate(-80px, 60px) scale(1);
+  }
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) skewX(40deg) scale(1.0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) skewX(40deg) scale(1.1);
+  }
+}
+
+@layer utilities {
+  .animate-spotlight {
+    animation: spotlight 2s ease 0.75s 1 forwards;
   }
 }

@@ -182,48 +182,52 @@ export default function Resources() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 left-0 w-[800px] h-[600px] bg-accent-teal/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none -translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-accent-amber/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 translate-y-1/3" />
+
       <Navigation />
 
-      <div className="pt-24 px-6 pb-12">
+      <div className="pt-24 px-6 pb-12 relative z-10">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-6 pt-4">
             <div className="flex items-center justify-center gap-3">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <Package className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 bg-accent-teal/10 rounded-full flex items-center justify-center border border-accent-teal/20 shadow-glow-teal/30">
+                <Package className="w-6 h-6 text-accent-teal" />
               </div>
             </div>
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Resource Center
+              <h1 className="text-4xl md:text-6xl font-display font-black text-text-primary tracking-hero mb-4">
+                Logistics <span className="text-accent-teal">Hub</span>
               </h1>
-              <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
-                Share resources or request what you need. Together we can support our Kerala community during crises.
+              <p className="text-text-secondary text-lg font-body max-w-2xl mx-auto">
+                Coordinate critical supplies. Declare operational needs or allocate available resources to the network.
               </p>
             </div>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-4 text-xs font-mono tracking-widest text-text-muted uppercase">
               <div className="flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                <span>Resource Sharing</span>
+                <Package className="w-4 h-4 text-accent-teal" />
+                <span>Supply Chain</span>
               </div>
-              <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+              <div className="w-1 h-1 bg-glass-border-strong rounded-full"></div>
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>Community Support</span>
+                <Users className="w-4 h-4 text-accent-teal" />
+                <span>Crowdsourced</span>
               </div>
             </div>
           </div>
 
           {/* Success Message */}
           {message && (
-            <Alert className={message.includes('success') ? 'border-green-200 bg-green-50' : 'border-destructive bg-destructive/10'}>
+            <Alert className={message.includes('success') ? 'border-accent-teal/30 bg-accent-teal/10' : 'border-accent-red/30 bg-accent-red/10'}>
               {message.includes('success') ? (
-                <CheckCircle className="h-4 w-4 text-green-600" />
+                <CheckCircle className="h-4 w-4 text-accent-teal" />
               ) : (
-                <AlertTriangle className="h-4 w-4 text-destructive" />
+                <AlertTriangle className="h-4 w-4 text-accent-red" />
               )}
-              <AlertDescription className={message.includes('success') ? 'text-green-800' : 'text-destructive'}>
+              <AlertDescription className={message.includes('success') ? 'text-accent-teal font-mono text-sm' : 'text-accent-red font-mono text-sm'}>
                 {message}
               </AlertDescription>
             </Alert>
@@ -233,108 +237,129 @@ export default function Resources() {
           <div className="flex justify-center">
             <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 px-8">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Post Resource
+                <Button className="btn-primary h-14 px-10 text-lg">
+                  <Plus className="w-5 h-5 mr-3" />
+                  LOG LOGISTICS DATA
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
+              <DialogContent className="sm:max-w-md bg-bg-base border-glass-border shadow-glow-teal/20">
                 <DialogHeader>
-                  <DialogTitle>Post Resource</DialogTitle>
-                  <DialogDescription>
-                    Share what you need or what you can offer to help the community.
+                  <DialogTitle className="text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+                    <Package className="text-accent-teal w-6 h-6" />
+                    Initialize Resource Profile
+                  </DialogTitle>
+                  <DialogDescription className="text-text-secondary font-body">
+                    Declare supply availability or register a critical deficit.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="resource_type">Type</Label>
-                    <Select value={newResource.resource_type} onValueChange={(value: "needed" | "available") => setNewResource({...newResource, resource_type: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="What type of post is this?" />
+                <div className="space-y-5 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="resource_type" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                      <span className="text-accent-teal">*</span> Profile Type
+                    </Label>
+                    <Select value={newResource.resource_type} onValueChange={(value: "needed" | "available") => setNewResource({ ...newResource, resource_type: value })}>
+                      <SelectTrigger className="bg-bg-void border-glass-border focus:ring-accent-teal h-12 font-mono uppercase text-sm text-text-primary">
+                        <SelectValue placeholder="Specify Intention" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="needed">I Need This Resource</SelectItem>
-                        <SelectItem value="available">I Can Provide This Resource</SelectItem>
+                      <SelectContent className="bg-glass-02 border-glass-border text-text-primary">
+                        <SelectItem value="needed" className="focus:bg-glass-01 focus:text-accent-amber">🔴 REQUISITION (Need)</SelectItem>
+                        <SelectItem value="available" className="focus:bg-glass-01 focus:text-accent-teal">🟢 SURPLUS (Available)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div>
-                    <Label htmlFor="type">Category</Label>
-                    <Select value={newResource.type} onValueChange={(value) => setNewResource({...newResource, type: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                  <div className="space-y-2">
+                    <Label htmlFor="type" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                      <span className="text-accent-teal">*</span> Classification
+                    </Label>
+                    <Select value={newResource.type} onValueChange={(value) => setNewResource({ ...newResource, type: value })}>
+                      <SelectTrigger className="bg-bg-void border-glass-border focus:ring-accent-teal h-12 text-text-primary">
+                        <SelectValue placeholder="Select class" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-glass-02 border-glass-border text-text-primary">
                         {resourceCategories.map(category => (
-                          <SelectItem key={category} value={category}>{category}</SelectItem>
+                          <SelectItem key={category} value={category} className="focus:bg-glass-01">{category}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div>
-                    <Label htmlFor="name">Resource Name</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                      <span className="text-accent-teal">*</span> Designation
+                    </Label>
                     <Input
                       id="name"
                       value={newResource.name}
-                      onChange={(e) => setNewResource({...newResource, name: e.target.value})}
-                      placeholder="e.g., Rice, Medicine, Blankets"
+                      onChange={(e) => setNewResource({ ...newResource, name: e.target.value })}
+                      placeholder="e.g., MREs, Antibiotics, Tarps"
+                      className="bg-bg-void border-glass-border focus-visible:ring-accent-teal focus-visible:border-accent-teal text-text-primary h-12"
                     />
                   </div>
 
-                  <div>
-                    <Label htmlFor="description">Description</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                      Detailed Telemetry
+                    </Label>
                     <Textarea
                       id="description"
                       value={newResource.description}
-                      onChange={(e) => setNewResource({...newResource, description: e.target.value})}
-                      placeholder="Describe the resource and your needs..."
+                      onChange={(e) => setNewResource({ ...newResource, description: e.target.value })}
+                      placeholder="Provide specifications, condition, expiration dates..."
+                      className="bg-bg-void border-glass-border focus-visible:ring-accent-teal focus-visible:border-accent-teal text-text-primary resize-none h-24"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="quantity">Quantity</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="quantity" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                        Unit Count
+                      </Label>
                       <Input
                         id="quantity"
                         type="number"
                         value={newResource.quantity}
-                        onChange={(e) => setNewResource({...newResource, quantity: e.target.value})}
+                        onChange={(e) => setNewResource({ ...newResource, quantity: e.target.value })}
                         placeholder="1"
+                        className="bg-bg-void border-glass-border focus-visible:ring-accent-teal focus-visible:border-accent-teal text-text-primary h-12 font-mono"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="urgency">Urgency</Label>
-                      <Select value={newResource.urgency_level} onValueChange={(value) => setNewResource({...newResource, urgency_level: value})}>
-                        <SelectTrigger>
+                    <div className="space-y-2">
+                      <Label htmlFor="urgency" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                        Priority Level
+                      </Label>
+                      <Select value={newResource.urgency_level} onValueChange={(value) => setNewResource({ ...newResource, urgency_level: value })}>
+                        <SelectTrigger className="bg-bg-void border-glass-border focus:ring-accent-teal h-12 text-text-primary">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
+                        <SelectContent className="bg-glass-02 border-glass-border text-text-primary">
+                          <SelectItem value="low">Low Priority</SelectItem>
+                          <SelectItem value="medium">Medium Priority</SelectItem>
+                          <SelectItem value="high">High Priority</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="location">Location</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="text-xs font-mono uppercase tracking-label text-text-secondary flex items-center gap-2">
+                      <span className="text-accent-teal">*</span> Grid Coordinate
+                    </Label>
                     <Input
                       id="location"
                       value={newResource.location}
-                      onChange={(e) => setNewResource({...newResource, location: e.target.value})}
-                      placeholder="Your district or specific location"
+                      onChange={(e) => setNewResource({ ...newResource, location: e.target.value })}
+                      placeholder="Sector or exact address"
+                      className="bg-bg-void border-glass-border focus-visible:ring-accent-teal focus-visible:border-accent-teal text-text-primary h-12"
                     />
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowAddDialog(false)}>
-                    Cancel
+                <DialogFooter className="pt-6 border-t border-glass-border mt-4">
+                  <Button variant="ghost" onClick={() => setShowAddDialog(false)} className="text-text-muted hover:text-text-primary hover:bg-glass-01 font-mono uppercase tracking-widest text-xs">
+                    ABORT
                   </Button>
-                  <Button onClick={handleAddResource} className="bg-primary hover:bg-primary/90">
-                    Post Resource
+                  <Button onClick={handleAddResource} className="bg-accent-teal hover:bg-accent-teal/90 text-bg-void shadow-glow-teal font-display font-black tracking-wide">
+                    COMMIT DATA
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -342,42 +367,42 @@ export default function Resources() {
           </div>
 
           {/* Search and Filters */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
-                    <Package className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                    <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-muted w-5 h-5 pointer-events-none" />
                     <Input
-                      placeholder="Search resources..."
+                      placeholder="QUERY DATABASE: Search designations..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 bg-background border-input focus:border-primary h-12 text-base"
+                      className="pl-12 bg-bg-void border-glass-border focus:border-accent-teal h-14 text-base font-body text-text-primary placeholder:text-text-muted placeholder:font-mono placeholder:tracking-wide w-full"
                     />
                   </div>
                 </div>
 
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-full md:w-48 bg-background border-input focus:border-primary h-12">
-                    <Package className="w-4 h-4 mr-3 text-primary" />
+                  <SelectTrigger className="w-full md:w-56 bg-bg-void border-glass-border focus:ring-accent-teal h-14 font-mono uppercase text-sm text-text-primary">
+                    <Package className="w-4 h-4 mr-3 text-accent-teal" />
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                  <SelectContent className="bg-glass-02 border-glass-border text-text-primary font-mono text-sm uppercase">
+                    <SelectItem value="all" className="focus:bg-glass-01 focus:text-accent-teal">All Classes</SelectItem>
                     {resourceCategories.map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                      <SelectItem key={category} value={category} className="focus:bg-glass-01">{category}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-full md:w-48 bg-background border-input focus:border-primary h-12">
+                  <SelectTrigger className="w-full md:w-48 bg-bg-void border-glass-border focus:ring-accent-teal h-14 font-mono uppercase text-sm text-text-primary">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="needed">Needed</SelectItem>
-                    <SelectItem value="available">Available</SelectItem>
+                  <SelectContent className="bg-glass-02 border-glass-border text-text-primary font-mono text-sm uppercase">
+                    <SelectItem value="all" className="focus:bg-glass-01 focus:text-accent-teal">All Profiles</SelectItem>
+                    <SelectItem value="needed" className="focus:bg-glass-01">Requisitions</SelectItem>
+                    <SelectItem value="available" className="focus:bg-glass-01">Surplus</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -388,83 +413,98 @@ export default function Resources() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center space-y-4">
-                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-                <p className="text-muted-foreground">Loading resources...</p>
+                <div className="w-12 h-12 border-4 border-accent-teal/20 border-t-accent-teal rounded-full animate-spin mx-auto"></div>
+                <p className="text-text-muted font-mono tracking-widest uppercase text-sm">Querying Database...</p>
               </div>
             </div>
           ) : filteredResources.length === 0 ? (
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center space-y-6">
-                <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto">
-                  <Package className="w-10 h-10 text-muted-foreground" />
+            <Card className="glass-card border-dashed border-2 border-glass-border/50">
+              <CardContent className="p-16 text-center space-y-6">
+                <div className="w-20 h-20 bg-glass-02 rounded-full flex items-center justify-center mx-auto ring-1 ring-glass-border">
+                  <Package className="w-10 h-10 text-text-muted" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    {resources.length === 0 ? 'No Resources Yet' : 'No Resources Match Your Filters'}
+                  <h3 className="text-2xl font-display font-bold text-text-primary mb-3">
+                    {resources.length === 0 ? 'Database Empty' : 'Zero Results Found'}
                   </h3>
-                  <p className="text-muted-foreground text-lg max-w-md mx-auto">
+                  <p className="text-text-secondary text-lg max-w-md mx-auto mb-8 font-body">
                     {resources.length === 0
-                      ? 'Be the first to share resources or request what you need.'
-                      : 'Try adjusting your search terms or filters.'
+                      ? 'No logistics data has been committed to the server.'
+                      : 'Try broadening your search parameters.'
                     }
                   </p>
                 </div>
                 {resources.length === 0 && (
-                  <Button onClick={() => setShowAddDialog(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 px-8">
-                    <Plus className="w-5 h-5 mr-2" />
-                    Add First Resource
+                  <Button onClick={() => setShowAddDialog(true)} className="btn-primary h-12 px-8">
+                    <Plus className="w-5 h-5 mr-3" />
+                    Initialize First Entry
                   </Button>
                 )}
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredResources.map((resource) => (
-                <Card key={resource.id} className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant={resource.resource_type === 'available' ? 'default' : 'secondary'} className="text-xs">
-                            {resource.resource_type === 'available' ? 'Available' : 'Needed'}
-                          </Badge>
-                          <Badge className={`border text-xs ${getUrgencyColor(resource.urgency_level)}`}>
-                            {resource.urgency_level}
-                          </Badge>
-                        </div>
-                        <h3 className="text-lg font-bold text-foreground line-clamp-2 mb-1">
-                          {resource.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-2">{resource.type}</p>
-                        <p className="text-muted-foreground leading-relaxed line-clamp-2 text-sm mb-3">
-                          {resource.description}
-                        </p>
-                        <div className="space-y-1 text-xs text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            <span>{resource.location}</span>
+            <>
+              <div className="flex items-center justify-between border-b border-glass-border pb-2">
+                <p className="text-text-muted font-mono text-sm uppercase tracking-widest">
+                  Showing <span className="font-bold text-accent-teal">{filteredResources.length}</span> of <span className="font-bold text-text-primary">{resources.length}</span> Entries
+                </p>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {filteredResources.map((resource) => (
+                  <Card key={resource.id} className="glass-card-elevated hover:bg-glass-02 transition-all duration-300 group flex flex-col h-full border-t-4 border-t-transparent hover:border-t-accent-teal">
+                    <CardContent className="p-6 flex flex-col h-full space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Badge className={`uppercase tracking-label font-mono bg-transparent border text-xs ${resource.resource_type === 'available'
+                                ? 'border-accent-teal text-accent-teal shadow-[0_0_10px_rgba(45,212,191,0.2)]'
+                                : 'border-accent-amber text-accent-amber shadow-[0_0_10px_rgba(251,191,36,0.2)]'
+                              }`}>
+                              {resource.resource_type === 'available' ? 'SURPLUS' : 'REQUISITION'}
+                            </Badge>
+                            <Badge className={`uppercase tracking-label font-mono bg-transparent border text-xs ${resource.urgency_level === 'high' ? 'border-accent-red text-accent-red' :
+                                resource.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
+                                  'border-accent-teal text-accent-teal'
+                              }`}>
+                              {resource.urgency_level}
+                            </Badge>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Package className="w-3 h-3" />
-                            <span>Quantity: {resource.quantity}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            <span>{new Date(resource.created_at).toLocaleDateString()}</span>
+                          <h3 className="text-xl font-display font-bold text-text-primary line-clamp-2 mb-1 group-hover:text-accent-teal transition-colors">
+                            {resource.name}
+                          </h3>
+                          <p className="text-xs font-mono uppercase tracking-widest text-accent-teal border-b border-glass-border pb-2 mb-3">{resource.type}</p>
+                          <p className="text-text-secondary leading-relaxed line-clamp-2 text-sm mb-4 font-body">
+                            {resource.description}
+                          </p>
+
+                          <div className="space-y-2 bg-glass-01 border border-glass-border rounded-lg p-3 text-xs font-mono text-text-secondary">
+                            <div className="flex items-center gap-3">
+                              <MapPin className="w-3.5 h-3.5 text-accent-teal shrink-0" />
+                              <span className="truncate">{resource.location}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <Package className="w-3.5 h-3.5 text-accent-teal shrink-0" />
+                              <span>QUANTITY: <span className="text-text-primary font-bold">{resource.quantity}</span></span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <Clock className="w-3.5 h-3.5 text-accent-teal shrink-0" />
+                              <span>{new Date(resource.created_at).toLocaleDateString()}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="pt-3 border-t border-border">
-                      <p className="text-xs text-muted-foreground">
-                        Contact: {resource.contact_info || 'Contact poster for details'}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <div className="pt-3 mt-auto border-t border-glass-border">
+                        <p className="text-xs font-mono uppercase tracking-widest text-text-muted flex items-center gap-2">
+                          <Users className="w-3.5 h-3.5 text-accent-teal" />
+                          <span className="truncate">{resource.contact_info || 'CONTACT POSTER DIRECTLY'}</span>
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

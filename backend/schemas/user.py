@@ -8,6 +8,7 @@ class UserCreate(BaseModel):
     role: Literal["user", "volunteer"] = "user"
 
 class ShowUser(BaseModel):
+    id: int
     username: str
     email: EmailStr
     role: str

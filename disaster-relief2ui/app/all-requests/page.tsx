@@ -158,60 +158,64 @@ export default function AllRequests() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-accent-teal/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent-blue/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none -translate-x-1/2 translate-y-1/3" />
+
       <Navigation />
 
-      <div className="pt-24 px-6 pb-12">
+      <div className="pt-24 px-6 pb-12 relative z-10">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-6 pt-4">
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Community Requests
+              <h1 className="text-4xl md:text-6xl font-display font-black text-text-primary tracking-hero mb-4">
+                Global <span className="text-accent-teal">Feed</span>
               </h1>
-              <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
-                Discover requests from your community and offer your help to those who need it most
+              <p className="text-text-secondary text-lg font-body max-w-2xl mx-auto">
+                Discover requests from your community and offer your capabilities where they are most needed.
               </p>
             </div>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-4 text-xs font-mono tracking-widest text-text-muted uppercase">
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>Community Impact</span>
+                <Users className="w-4 h-4 text-accent-teal" />
+                <span>Civilian Network</span>
               </div>
-              <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+              <div className="w-1 h-1 bg-glass-border-strong rounded-full"></div>
               <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4" />
-                <span>Make a Difference</span>
+                <div className="w-2 h-2 bg-accent-teal rounded-full animate-pulse shadow-glow-teal"></div>
+                <span>Live Intel</span>
               </div>
             </div>
           </div>
 
           {/* Search and Filters */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-muted w-5 h-5 pointer-events-none" />
                     <Input
-                      placeholder="Search by title, description, or location..."
+                      placeholder="SCAN NETWORK: Search by title, description, or location..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 bg-background border-input focus:border-primary h-12 text-base"
+                      className="pl-12 bg-bg-void border-glass-border focus:border-accent-teal h-14 text-base font-body text-text-primary placeholder:text-text-muted placeholder:font-mono placeholder:tracking-wide w-full"
                     />
                   </div>
                 </div>
 
                 <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-                  <SelectTrigger className="w-full md:w-56 bg-background border-input focus:border-primary h-12">
-                    <Filter className="w-4 h-4 mr-3 text-primary" />
+                  <SelectTrigger className="w-full md:w-64 bg-bg-void border-glass-border focus:ring-accent-teal h-14 font-mono uppercase text-sm text-text-primary">
+                    <Filter className="w-4 h-4 mr-3 text-accent-teal" />
                     <SelectValue placeholder="Filter by urgency" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">🎯 All Urgency Levels</SelectItem>
-                    <SelectItem value="high">🔴 High Priority</SelectItem>
-                    <SelectItem value="medium">🟡 Medium Priority</SelectItem>
-                    <SelectItem value="low">🟢 Low Priority</SelectItem>
+                  <SelectContent className="bg-glass-02 border-glass-border text-text-primary font-mono text-sm uppercase">
+                    <SelectItem value="all" className="focus:bg-glass-01 focus:text-accent-teal">🎯 All Threat Levels</SelectItem>
+                    <SelectItem value="high" className="focus:bg-glass-01 focus:text-accent-red font-bold">🔴 Critical Priority</SelectItem>
+                    <SelectItem value="medium" className="focus:bg-glass-01 focus:text-accent-amber">🟡 Medium Priority</SelectItem>
+                    <SelectItem value="low" className="focus:bg-glass-01 focus:text-accent-teal">🟢 Low Priority</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -222,154 +226,157 @@ export default function AllRequests() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center space-y-4">
-                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-                <p className="text-muted-foreground">Loading community requests...</p>
+                <div className="w-12 h-12 border-4 border-accent-teal/20 border-t-accent-teal rounded-full animate-spin mx-auto"></div>
+                <p className="text-text-muted font-mono tracking-widest uppercase text-sm">Scanning Feed...</p>
               </div>
             </div>
           ) : filteredRequests.length === 0 ? (
-            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center space-y-6">
-                <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto">
-                  <Search className="w-10 h-10 text-muted-foreground" />
+            <Card className="glass-card border-dashed border-2 border-glass-border/50">
+              <CardContent className="p-16 text-center space-y-6">
+                <div className="w-20 h-20 bg-glass-02 rounded-full flex items-center justify-center mx-auto ring-1 ring-glass-border">
+                  <Search className="w-10 h-10 text-text-muted" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    {requests.length === 0 ? 'No Requests Yet' : 'No Requests Match Your Filters'}
+                  <h3 className="text-2xl font-display font-bold text-text-primary mb-3">
+                    {requests.length === 0 ? 'No Active Beacons' : 'No Intel Found'}
                   </h3>
-                  <p className="text-muted-foreground text-lg max-w-md mx-auto">
+                  <p className="text-text-secondary text-lg max-w-md mx-auto mb-8 font-body">
                     {requests.length === 0
-                      ? 'Be the first to create a help request and start helping your community!'
-                      : 'Try adjusting your search terms or filters to find more requests'
+                      ? 'The network is currently clear. Initialize a beacon if assistance is required.'
+                      : 'Adjust search parameters to widen the scan radius.'
                     }
                   </p>
                 </div>
                 {requests.length === 0 && user?.role === 'user' && (
                   <Button
                     onClick={() => window.location.href = '/request-help'}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 px-8"
+                    className="btn-primary h-12 px-8"
                   >
-                    <AlertCircle className="w-5 h-5 mr-2" />
-                    Create First Request
+                    <AlertCircle className="w-5 h-5 mr-3" />
+                    Initialize First Beacon
                   </Button>
                 )}
               </CardContent>
             </Card>
           ) : (
             <>
-              <div className="flex items-center justify-between">
-                <p className="text-muted-foreground">
-                  Showing <span className="font-semibold text-foreground">{filteredRequests.length}</span> of <span className="font-semibold text-foreground">{requests.length}</span> requests
+              <div className="flex items-center justify-between border-b border-glass-border pb-2">
+                <p className="text-text-muted font-mono text-sm uppercase tracking-widest">
+                  Showing <span className="font-bold text-accent-teal">{filteredRequests.length}</span> of <span className="font-bold text-text-primary">{requests.length}</span> Results
                 </p>
               </div>
 
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {filteredRequests.map((request) => (
-                  <Card key={request.id} className="shadow-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
-                    <CardContent className="p-6 space-y-4">
+                  <Card key={request.id} className="glass-card-elevated hover:bg-glass-02 transition-all duration-300 group flex flex-col h-full border-t-4 border-t-transparent hover:border-t-accent-teal">
+                    <CardContent className="p-6 flex flex-col h-full space-y-4">
                       {/* Header with Title and Urgency */}
-                      <div className="space-y-3">
-                        <div className="flex items-start gap-3">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-xl font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                              {request.title}
-                            </h3>
-                            <Badge className={`border mt-2 ${getUrgencyColor(request.urgency_level)}`}>
-                              {request.urgency_level} priority
-                            </Badge>
+                      <div className="flex items-start justify-between min-h-[4rem]">
+                        <div className="flex-1 min-w-0 pr-2">
+                          <h3 className="text-xl font-display font-bold text-text-primary mb-3 line-clamp-2 group-hover:text-accent-teal transition-colors">
+                            {request.title}
+                          </h3>
+                          <Badge className={`uppercase tracking-label font-mono bg-transparent border flex flex-row items-center justify-center gap-1 w-fit ${request.urgency_level === 'high' ? 'border-accent-red text-accent-red' :
+                              request.urgency_level === 'medium' ? 'border-accent-amber text-accent-amber' :
+                                'border-accent-teal text-accent-teal'
+                            }`}>
+                            {request.urgency_level}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-text-secondary font-body leading-relaxed line-clamp-3 mb-2 flex-grow">
+                        {request.description}
+                      </p>
+
+                      {/* Location and Date */}
+                      <div className="space-y-3 pt-3 mt-auto mb-2 border-t border-glass-border">
+                        <div className="flex items-center gap-3 text-sm font-mono text-text-muted">
+                          <MapPin className="w-4 h-4 text-accent-teal shrink-0" />
+                          <span className="truncate">{request.location}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-sm font-mono text-text-muted">
+                          <Clock className="w-4 h-4 text-accent-teal shrink-0" />
+                          <span>{new Date(request.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+
+                      {/* User Contact Info for Volunteers */}
+                      {user?.role === 'volunteer' && request.user && (
+                        <div className="bg-glass-01 border border-glass-border rounded-lg p-4 space-y-2 mt-2">
+                          <p className="text-xs uppercase tracking-label font-bold text-accent-teal">Origin Contact Data</p>
+                          <div className="space-y-1.5 text-xs font-mono text-text-secondary">
+                            <p className="flex items-center gap-2">
+                              <User className="w-3 h-3 text-text-muted" />
+                              {request.user.username}
+                            </p>
+                            {request.user.phone_number && (
+                              <p className="flex items-center gap-2">
+                                <Phone className="w-3 h-3 text-text-muted" />
+                                {request.user.phone_number}
+                              </p>
+                            )}
+                            <p className="flex items-center gap-2 truncate">
+                              <span className="w-3 h-3 text-text-muted flex items-center justify-center">@</span>
+                              {request.user.email}
+                            </p>
                           </div>
                         </div>
+                      )}
 
-                        {/* Description */}
-                        <p className="text-muted-foreground leading-relaxed line-clamp-3">
-                          {request.description}
-                        </p>
-
-                        {/* Location and Date */}
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="w-4 h-4 text-primary" />
-                            <span>{request.location}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="w-4 h-4 text-primary" />
-                            <span>{new Date(request.created_at).toLocaleDateString()}</span>
-                          </div>
+                      {/* Image Preview */}
+                      {request.photo && (
+                        <div className="relative w-full h-32 rounded-lg overflow-hidden border border-glass-border bg-glass-01 mt-3 shrink-0">
+                          <img
+                            src={`${API_BASE_URL}/uploads/${request.photo}`}
+                            alt="Beacon Evidence"
+                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                          />
                         </div>
+                      )}
 
-                        {/* User Contact Info for Volunteers */}
-                        {user?.role === 'volunteer' && request.user && (
-                          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2">
-                            <p className="text-sm font-medium text-primary">Contact Information</p>
-                            <div className="space-y-1 text-sm">
-                              <p className="text-foreground">
-                                <span className="font-medium">Name:</span> {request.user.username}
-                              </p>
-                              {request.user.phone_number && (
-                                <p className="text-foreground">
-                                  <span className="font-medium">Phone:</span> {request.user.phone_number}
-                                </p>
-                              )}
-                              <p className="text-foreground">
-                                <span className="font-medium">Email:</span> {request.user.email}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Image Preview */}
-                        {request.photo && (
-                          <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted/50">
-                            <img
-                              src={`${API_BASE_URL}/uploads/${request.photo}`}
-                              alt="Request"
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                          </div>
-                        )}
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-2 pt-2">
-                          {user?.role === 'volunteer' && user.id !== request.user_id && (
-                            <Button
-                              onClick={() => applyToRequest(request.id)}
-                              disabled={applyingTo === request.id || request.has_applied}
-                              className={`flex-1 shadow-lg hover:shadow-xl transition-all duration-300 ${
-                                request.has_applied
-                                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                                  : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 pt-4 mt-auto">
+                        {user?.role === 'volunteer' && user.id !== request.user_id && (
+                          <Button
+                            onClick={() => applyToRequest(request.id)}
+                            disabled={applyingTo === request.id || request.has_applied}
+                            className={`flex-1 h-12 font-display font-bold transition-all duration-300 ${request.has_applied
+                                ? 'bg-accent-teal/20 text-accent-teal border border-accent-teal/30 cursor-not-allowed'
+                                : 'btn-primary'
                               }`}
-                            >
-                              {applyingTo === request.id ? (
-                                <>
-                                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
-                                  Applying...
-                                </>
-                              ) : request.has_applied ? (
-                                <>
-                                  <CheckCircle className="w-4 h-4 mr-2" />
-                                  Offered
-                                </>
-                              ) : (
-                                <>
-                                  <Heart className="w-4 h-4 mr-2" />
-                                  Offer Help
-                                </>
-                              )}
-                            </Button>
-                          )}
+                          >
+                            {applyingTo === request.id ? (
+                              <span className="flex items-center justify-center gap-2 font-mono text-sm tracking-widest uppercase text-bg-void">
+                                <div className="w-4 h-4 border-2 border-bg-void/50 border-t-bg-void rounded-full animate-spin" />
+                                Transmitting...
+                              </span>
+                            ) : request.has_applied ? (
+                              <span className="flex items-center justify-center gap-2">
+                                <CheckCircle className="w-4 h-4" />
+                                OVERSEEN
+                              </span>
+                            ) : (
+                              <span className="flex items-center justify-center gap-2">
+                                <Heart className="w-4 h-4" />
+                                DEPLOY
+                              </span>
+                            )}
+                          </Button>
+                        )}
 
-                          {user?.id === request.user_id && (
-                            <Button
-                              onClick={() => deleteRequest(request.id)}
-                              variant="destructive"
-                              size="sm"
-                              className="bg-destructive hover:bg-destructive/90 shadow-lg hover:shadow-xl transition-all duration-300"
-                            >
-                              <Heart className="w-4 h-4 mr-2" />
-                              Delete
-                            </Button>
-                          )}
-                        </div>
+                        {user?.id === request.user_id && (
+                          <Button
+                            onClick={() => deleteRequest(request.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="w-full bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-white border border-accent-red/20 h-10 font-mono tracking-widest uppercase text-xs"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2 border" />
+                            Deactivate
+                          </Button>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
