@@ -9,43 +9,19 @@ logger = logging.getLogger(__name__)
 
 def send_email(to_email: str, subject: str, body: str) -> bool:
     """
-    Sends a secure email using SMTP and TLS.
-    Returns True if success, False otherwise.
+    Email sending disabled in production due to Render SMTP restrictions.
+    Logs the email content for debugging purposes.
+    Returns True to indicate "success" for flow continuity.
     """
-    smtp_server = os.getenv("SMTP_SERVER", settings.SMTP_SERVER)
-    smtp_port = int(os.getenv("SMTP_PORT", settings.SMTP_PORT))
-    smtp_user = os.getenv("SMTP_USERNAME", settings.SMTP_USERNAME)
-    smtp_pass = os.getenv("SMTP_PASSWORD", settings.SMTP_PASSWORD)
-    email_from = os.getenv("EMAIL_FROM", settings.EMAIL_FROM)
-
-    if not smtp_user or not smtp_pass:
-        logger.warning("SMTP credentials missing. Email not sent.")
-        return False
-
-    msg = EmailMessage()
-    msg["From"] = email_from
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg.set_content(body)
-
-    print(f"\n--- [OUTGOING EMAIL] ---\nTo: {to_email}\nSubject: {subject}\nBody:\n{body}\n----------------------\n")
-
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port, timeout=10) as server:
-            server.set_debuglevel(1)  # Enable detailed SMTP debug output
-            server.starttls()
-            server.login(smtp_user, smtp_pass)
-            server.send_message(msg)
-        logger.info(f"Email sent successfully to {to_email}")
-        print(f"✅ Email technically sent to {to_email} (check inbox/spam)")
-        return True
-    except Exception as e:
-        error_msg = f"❌ SMTP Error while sending to {to_email}: {str(e)}"
-        print(error_msg)
-        logger.error(error_msg)
-        # We return false, and the caller should handle it or we should raise.
-        # But for now, we've logged it clearly to the console.
-        return False
+    # Log the email content
+    print(f"\n--- [EMAIL DISABLED - LOG ONLY] ---")
+    print(f"To: {to_email}")
+    print(f"Subject: {subject}")
+    print(f"Body:\n{body}")
+    print(f"----------------------\n")
+    
+    logger.info(f"Email to {to_email} logged (sending disabled)")
+    return True
 
 def notify_volunteer(volunteer_email: str, volunteer_name: str, request_data: dict, notification_type: str):
     """
