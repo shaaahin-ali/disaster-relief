@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { SplineScene } from "@/components/ui/splite"
 import { Spotlight } from "@/components/ui/spotlight"
 import { ChevronRight, ArrowDown } from "lucide-react"
+import { Header } from "@/components/ui/header-1"
+import NeuralBackground from "@/components/ui/flow-field-background"
 
 interface LandingPageProps {
   onAuthClick: (mode: "signin" | "signup") => void
@@ -52,34 +54,12 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
 
   return (
     <div className="relative bg-black text-white font-body overflow-x-hidden">
+      <NeuralBackground className="fixed inset-0 z-0 pointer-events-none" color="#9ca3af" trailOpacity={0.1} speed={0.8} particleCount={400} />
 
-      {/* ── STICKY NAV ── */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-black/90 backdrop-blur-md border-b border-white/10 py-4" : "bg-transparent py-6"
-          }`}
-      >
-        <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <span className="text-sm font-mono uppercase tracking-[0.2em] text-white/60">
-            Sahay / Kerala
-          </span>
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => onAuthClick("signin")}
-              className="text-xs font-mono uppercase tracking-widest text-white/50 hover:text-white transition-colors"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => onAuthClick("signup")}
-              className="text-xs font-mono uppercase tracking-widest px-5 py-2.5 border border-white/20 hover:border-white/60 hover:bg-white hover:text-black transition-all duration-300"
-            >
-              Get Started
-            </button>
-          </div>
-        </nav>
-      </header>
+      {/* â”€â”€ STICKY NAV â”€â”€ */}
+      <Header onAuthClick={onAuthClick} />
 
-      {/* ── HERO SECTION (Spline 3D) ── */}
+      {/* â”€â”€ HERO SECTION (Spline 3D) â”€â”€ */}
       <section
         ref={heroRef}
         className="relative w-full h-screen overflow-hidden bg-black flex items-center"
@@ -123,7 +103,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
                     transition={{ duration: 0.7, delay: 0.55 }}
                     className="mt-8 max-w-sm text-white/50 text-base leading-relaxed"
                   >
-                    One tap. Real relief. Right now. Kerala's disaster coordination network — connecting civilians with volunteers in real time.
+                    One tap. Real relief. Right now. Kerala's disaster coordination network â€” connecting civilians with volunteers in real time.
                   </motion.p>
 
                   <motion.div
@@ -172,7 +152,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </motion.div>
       </section>
 
-      {/* ── STATS STRIP ── */}
+      {/* â”€â”€ STATS STRIP â”€â”€ */}
       <section className="border-t border-b border-white/10 bg-black py-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((s, i) => (
@@ -191,7 +171,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
+      {/* â”€â”€ FEATURES â”€â”€ */}
       <section className="bg-black py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -226,7 +206,7 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* â”€â”€ CTA â”€â”€ */}
       <section className="bg-white text-black py-32 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-12">
           <motion.div
@@ -261,11 +241,11 @@ export function LandingPage({ onAuthClick }: LandingPageProps) {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* â”€â”€ FOOTER â”€â”€ */}
       <footer className="bg-black border-t border-white/10 py-10 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <span className="font-mono text-xs uppercase tracking-widest text-white/30">
-            © 2026 Sahay Kerala. All rights reserved.
+            Â© 2026 Sahay Kerala. All rights reserved.
           </span>
           <div className="flex gap-8 font-mono text-xs uppercase tracking-widest text-white/30">
             <button onClick={() => onAuthClick("signin")} className="hover:text-white/70 transition-colors">Sign In</button>

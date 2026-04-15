@@ -1,25 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { Navigation } from "@/components/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import {
-  Plus,
-  Heart,
-  MapPin,
-  Clock,
   AlertCircle,
+  Clock,
+  Mail,
+  MapPin,
+  Plus,
+  Trash2,
   User,
   Users,
-  Trash2,
   Phone,
-  Mail,
-  Package,
+  ArrowRight,
+  Heart,
+  Bell,
+  Shield,
+  Zap,
 } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
+import { Navigation } from "@/components/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { EtherealShadow } from "@/components/ui/ethereal-shadow";
 
 interface HelpRequest {
   id: number;
@@ -44,6 +49,64 @@ interface HelpRequest {
     applied_at?: string;
   }>;
 }
+
+const ACTIONS = [
+  {
+    title: "Request help",
+    description: "Create a new request when you need support.",
+    href: "/request-help",
+    icon: <Heart className="h-5 w-5" />,
+    gradient: "from-rose-500/20 to-orange-500/20",
+    color: "text-rose-400",
+  },
+  {
+    title: "Browse requests",
+    description: "Review requests across the community.",
+    href: "/all-requests",
+    icon: <Bell className="h-5 w-5" />,
+    gradient: "from-blue-500/20 to-cyan-500/20",
+    color: "text-blue-400",
+  },
+  {
+    title: "Resources",
+    description: "Share or browse available supplies.",
+    href: "/resources",
+    icon: <Shield className="h-5 w-5" />,
+    gradient: "from-emerald-500/20 to-teal-500/20",
+    color: "text-emerald-400",
+  },
+  {
+    title: "Profile",
+    description: "Update your account details.",
+    href: "/profile",
+    icon: <User className="h-5 w-5" />,
+    gradient: "from-violet-500/20 to-purple-500/20",
+    color: "text-violet-400",
+  },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
 
 export default function Dashboard() {
   const { user, token, isLoading } = useAuth();
@@ -77,9 +140,8 @@ export default function Dashboard() {
 
       if (response.ok) {
         const allRequests = await response.json();
-        // Filter requests by current user
         const userRequests = allRequests.filter(
-          (req: HelpRequest) => req.user_id === user?.id,
+          (request: HelpRequest) => request.user_id === user?.id,
         );
         setRequests(userRequests);
       }
@@ -108,7 +170,7 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        setRequests(requests.filter((req) => req.id !== requestId));
+        setRequests((prev) => prev.filter((request) => request.id !== requestId));
       } else {
         alert("Failed to delete request");
       }
@@ -118,392 +180,331 @@ export default function Dashboard() {
     }
   };
 
-  const getUrgencyColor = (level: string) => {
-    switch (level) {
-      case "high":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low":
-        return "bg-green-100 text-green-800 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/60">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-bg-base relative overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute top-0 left-0 w-[800px] h-[600px] bg-accent-teal/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-accent-blue/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 translate-y-1/3" />
+    <div className="relative min-h-screen bg-black text-white">
+      {/* Ethereal background */}
+      <EtherealShadow
+        color1="rgba(139, 92, 246, 0.12)"
+        color2="rgba(59, 130, 246, 0.08)"
+        color3="rgba(16, 185, 129, 0.06)"
+        speed={0.8}
+      />
 
       <Navigation />
 
-      <div className="pt-24 px-6 pb-12 relative z-10">
-        <div className="max-w-6xl mx-auto space-y-12">
-          {/* Header */}
-          <div className="text-center space-y-4 pt-8">
-            <h1 className="text-4xl md:text-6xl font-display font-black text-text-primary tracking-hero">
-              Welcome back,{" "}
-              <span className="text-accent-teal">{user.username}</span>
-            </h1>
-            <p className="text-text-secondary text-xl font-body max-w-2xl mx-auto">
-              Manage your help requests and connect with our amazing community
-              of volunteers
-            </p>
-          </div>
-
-          {/* Quick Actions (Bento Grid) */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card
-              className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer"
-              onClick={() => (window.location.href = "/request-help")}
-            >
-              <CardContent className="p-8 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-accent-teal/10 rounded-xl flex items-center justify-center group-hover:bg-accent-teal/20 transition-colors">
-                    <Plus className="w-7 h-7 text-accent-teal" />
-                  </div>
+      <motion.main
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        className="relative z-10 pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="mx-auto max-w-7xl">
+          {/* Hero Section */}
+          <motion.section variants={itemVariants} className="mb-12">
+            <div className="glass-card rounded-3xl p-8 md:p-12 overflow-hidden relative">
+              {/* Background glow */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-500/20 to-purple-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
+              
+              <div className="relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                   <div>
-                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-teal transition-colors">
-                      Request Help
-                    </h3>
-                    <p className="text-text-muted text-sm mt-1">
-                      Create a new request
-                    </p>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="font-mono text-sm uppercase tracking-widest text-text-accent mb-2"
+                    >
+                      Dashboard
+                    </motion.p>
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white"
+                    >
+                      Welcome back, {user.username}
+                    </motion.h1>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="mt-3 text-text-secondary max-w-lg"
+                    >
+                      Manage your requests, track volunteer responses, and coordinate relief efforts in real-time.
+                    </motion.p>
                   </div>
-                </div>
-                <div className="mt-auto">
-                  <Button className="w-full h-12 btn-primary border-none shadow-glow-teal/50 truncate">
-                    Create Request
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card
-              className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer"
-              onClick={() => (window.location.href = "/all-requests")}
-            >
-              <CardContent className="p-8 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-accent-amber/10 rounded-xl flex items-center justify-center group-hover:bg-accent-amber/20 transition-colors">
-                    <Heart className="w-7 h-7 text-accent-amber" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-amber transition-colors">
-                      Browse Help
-                    </h3>
-                    <p className="text-text-muted text-sm mt-1">
-                      See active requests
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-auto">
-                  <Button
-                    variant="outline"
-                    className="w-full h-12 btn-secondary border-accent-amber/30 text-accent-amber hover:bg-accent-amber/10 hover:text-accent-amber"
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 }}
                   >
-                    View Community
-                  </Button>
+                    <Button
+                      onClick={() => router.push("/request-help")}
+                      className="bg-white text-black hover:bg-white/90 px-6 py-3 rounded-full font-medium"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      New Request
+                    </Button>
+                  </motion.div>
                 </div>
-              </CardContent>
-            </Card>
 
-            <Card
-              className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer"
-              onClick={() => (window.location.href = "/resources")}
-            >
-              <CardContent className="p-8 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-accent-blue/10 rounded-xl flex items-center justify-center group-hover:bg-accent-blue/20 transition-colors">
-                    <Package className="w-7 h-7 text-accent-blue" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-blue transition-colors">
-                      Resources
+                {/* Quick Stats */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"
+                >
+                  {[
+                    { label: "Your Requests", value: requests.length, icon: <Bell className="h-4 w-4" /> },
+                    { label: "Volunteers", value: requests.reduce((acc, r) => acc + (r.volunteers?.length || 0), 0), icon: <Users className="h-4 w-4" /> },
+                    { label: "High Priority", value: requests.filter(r => r.urgency_level === "high").length, icon: <Zap className="h-4 w-4" /> },
+                    { label: "Resolved", value: 0, icon: <Heart className="h-4 w-4" /> },
+                  ].map((stat, index) => (
+                    <div key={stat.label} className="glass-card rounded-2xl p-4 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-2 text-text-secondary">
+                        {stat.icon}
+                        <span className="text-xs uppercase tracking-wider">{stat.label}</span>
+                      </div>
+                      <p className="font-display text-2xl font-bold text-white">{stat.value}</p>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* Action Cards */}
+          <motion.section variants={itemVariants} className="mb-12">
+            <h2 className="font-display text-xl font-semibold text-white mb-6 flex items-center gap-2">
+              Quick Actions
+              <ArrowRight className="h-5 w-5 text-text-secondary" />
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {ACTIONS.map((action, index) => (
+                <motion.button
+                  key={action.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => router.push(action.href)}
+                  className="group relative overflow-hidden rounded-2xl glass-card p-6 text-left transition-all"
+                >
+                  {/* Hover gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  
+                  <div className="relative z-10">
+                    <div className={`mb-4 inline-flex p-3 rounded-xl bg-white/5 ${action.color}`}>
+                      {action.icon}
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-white mb-1">
+                      {action.title}
                     </h3>
-                    <p className="text-text-muted text-sm mt-1">
-                      Share/request items
+                    <p className="text-sm text-text-secondary">
+                      {action.description}
                     </p>
+                    <div className="mt-4 flex items-center gap-1 text-sm font-medium text-white/60 group-hover:text-white transition-colors">
+                      Get started
+                      <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                </div>
-                <div className="mt-auto">
-                  <Button
-                    variant="outline"
-                    className="w-full h-12 btn-secondary border-accent-blue/30 text-accent-blue hover:bg-accent-blue/10 hover:text-accent-blue"
-                  >
-                    Browse Resources
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </motion.button>
+              ))}
+            </div>
+          </motion.section>
 
-            <Card
-              className="glass-card hover:bg-glass-02 transition-all duration-300 group cursor-pointer"
-              onClick={() => (window.location.href = "/profile")}
-            >
-              <CardContent className="p-8 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-accent-teal/10 rounded-xl flex items-center justify-center group-hover:bg-accent-teal/20 transition-colors">
-                    <User className="w-7 h-7 text-accent-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-display font-bold text-text-primary group-hover:text-accent-teal transition-colors">
-                      My Profile
-                    </h3>
-                    <p className="text-text-muted text-sm mt-1">
-                      Manage settings
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-auto">
-                  <Button
-                    variant="outline"
-                    className="w-full h-12 btn-secondary border-accent-teal/30 text-accent-teal hover:bg-accent-teal/10 hover:text-accent-teal"
-                  >
-                    View Profile
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* User's Help Requests */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-glass-border pb-4">
+          {/* My Requests Section */}
+          <motion.section variants={itemVariants} className="space-y-6">
+            <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-display font-bold text-text-primary mb-2">
-                  My Help Requests
+                <h2 className="font-display text-2xl font-semibold text-white mb-1">
+                  Your Requests
                 </h2>
-                <p className="text-text-secondary font-body">
-                  Track and manage your active requests
+                <p className="text-text-secondary text-sm">
+                  {requests.length === 0 ? "No active requests" : `${requests.length} active request${requests.length !== 1 ? 's' : ''}`}
                 </p>
               </div>
               <Button
-                onClick={() => (window.location.href = "/request-help")}
-                className="btn-primary h-12 px-6"
+                variant="outline"
+                onClick={() => router.push("/request-help")}
+                className="border-white/10 bg-white/5 hover:bg-white/10 text-white"
               >
-                <Plus className="w-5 h-5 mr-2" />
+                <Plus className="mr-2 h-4 w-4" />
                 New Request
               </Button>
             </div>
 
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center space-y-4">
-                  <div className="w-12 h-12 border-4 border-accent-teal/20 border-t-accent-teal rounded-full animate-spin mx-auto"></div>
-                  <p className="text-text-muted font-mono tracking-widest uppercase">
-                    Initializing Secure Link...
-                  </p>
-                </div>
+              <div className="glass-card rounded-2xl p-12 text-center">
+                <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-white/10 border-t-white" />
+                <p className="mt-4 text-sm text-text-secondary">Loading requests...</p>
               </div>
             ) : requests.length === 0 ? (
-              <Card className="glass-card border-dashed border-2 border-glass-border/50">
-                <CardContent className="p-16 text-center space-y-6">
-                  <div className="w-20 h-20 bg-glass-02 rounded-full flex items-center justify-center mx-auto ring-1 ring-glass-border">
-                    <AlertCircle className="w-10 h-10 text-text-muted" />
+              <Card className="glass-card border-white/5 rounded-2xl overflow-hidden">
+                <CardContent className="p-12 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/20 to-purple-500/20 mb-6">
+                    <AlertCircle className="h-8 w-8 text-violet-400" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-display font-bold text-text-primary mb-3">
-                      No Active Requests
-                    </h3>
-                    <p className="text-text-secondary text-lg max-w-md mx-auto mb-8">
-                      You haven't broadcasted any requests on the network. Start
-                      by creating a secure beacon for help.
-                    </p>
-                    <Button
-                      onClick={() => (window.location.href = "/request-help")}
-                      className="btn-primary h-12 px-8"
-                    >
-                      <Plus className="w-5 h-5 mr-2" />
-                      Initialize Request
-                    </Button>
-                  </div>
+                  <h3 className="font-display text-2xl font-semibold text-white mb-2">
+                    No requests yet
+                  </h3>
+                  <p className="mx-auto max-w-md text-sm text-text-secondary mb-6">
+                    When you submit a help request, it will appear here along with volunteer activity and contact information.
+                  </p>
+                  <Button
+                    onClick={() => router.push("/request-help")}
+                    className="bg-white text-black hover:bg-white/90"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create your first request
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-6">
-                {requests.map((request) => (
-                  <Card
+              <div className="space-y-4">
+                {requests.map((request, index) => (
+                  <motion.div
                     key={request.id}
-                    className="glass-card-elevated hover:bg-glass-02 transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 + index * 0.1 }}
                   >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-                        <div className="flex-1 space-y-4 w-full">
-                          <div className="flex items-start gap-4">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-2xl font-display font-bold text-text-primary line-clamp-1">
-                                  {request.title}
-                                </h3>
-                                <Badge
-                                  className={`uppercase tracking-label font-mono bg-transparent border ${
-                                    request.urgency_level === "high"
-                                      ? "border-accent-red text-accent-red"
-                                      : request.urgency_level === "medium"
-                                        ? "border-accent-amber text-accent-amber"
-                                        : "border-accent-teal text-accent-teal"
-                                  }`}
-                                >
-                                  {request.urgency_level} Priority
-                                </Badge>
-                              </div>
-                              <p className="text-text-secondary leading-relaxed mb-4 line-clamp-2">
-                                {request.description}
-                              </p>
+                    <Card className="glass-card-elevated border-white/5 rounded-2xl overflow-hidden hover:border-white/10 transition-colors">
+                      <CardContent className="p-6">
+                        <div className="flex flex-col lg:flex-row gap-6">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-3 mb-4">
+                              <h3 className="font-display text-xl font-semibold text-white">
+                                {request.title}
+                              </h3>
+                              <Badge
+                                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                  request.urgency_level === "high"
+                                    ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                    : request.urgency_level === "medium"
+                                    ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                    : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                                }`}
+                              >
+                                {request.urgency_level} priority
+                              </Badge>
+                            </div>
 
-                              <div className="flex flex-wrap items-center gap-4 text-sm font-mono text-text-muted">
-                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
-                                  <MapPin className="w-4 h-4 text-accent-teal" />
-                                  <span>{request.location}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
-                                  <Clock className="w-4 h-4 text-accent-teal" />
-                                  <span>
-                                    {new Date(
-                                      request.created_at,
-                                    ).toLocaleDateString()}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1.5 bg-glass-01 px-3 py-1.5 rounded-full border border-glass-border">
-                                  <User className="w-4 h-4 text-accent-teal" />
-                                  <span>ID #{request.id}</span>
-                                </div>
+                            <p className="text-text-secondary text-sm leading-relaxed mb-4">
+                              {request.description}
+                            </p>
+
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              <div className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs text-text-secondary">
+                                <MapPin className="h-3 w-3" />
+                                {request.location}
+                              </div>
+                              <div className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs text-text-secondary">
+                                <Clock className="h-3 w-3" />
+                                {new Date(request.created_at).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs text-text-secondary">
+                                <User className="h-3 w-3" />
+                                ID #{request.id}
                               </div>
                             </div>
 
-                            {request.photo && (
-                              <div className="flex-shrink-0">
-                                <img
-                                  src={`${API_BASE_URL}/uploads/${request.photo}`}
-                                  alt="Request evidence"
-                                  className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border border-glass-border shadow-card"
-                                />
+                            {request.user && (
+                              <div className="rounded-xl bg-white/5 p-4 mb-4">
+                                <p className="text-xs uppercase tracking-wider text-text-secondary mb-2">
+                                  Contact Details
+                                </p>
+                                <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
+                                  <span className="flex items-center gap-2">
+                                    <Mail className="h-4 w-4" />
+                                    {request.user.email}
+                                  </span>
+                                  {request.user.phone_number && (
+                                    <span className="flex items-center gap-2">
+                                      <Phone className="h-4 w-4" />
+                                      {request.user.phone_number}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             )}
-                          </div>
 
-                          {/* Contact Info */}
-                          {request.user && (
-                            <div className="bg-glass-01 border border-glass-border rounded-xl p-4 mt-4">
-                              <p className="text-xs uppercase tracking-label font-bold text-accent-teal mb-3">
-                                Origin Contact Data
-                              </p>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm font-mono text-text-secondary">
-                                <p className="flex items-center">
-                                  <Mail className="w-4 h-4 mr-2 text-text-muted" />
-                                  {request.user.email}
+                            {request.volunteers && request.volunteers.length > 0 && (
+                              <div className="rounded-xl bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 p-4">
+                                <p className="flex items-center gap-2 text-sm font-medium text-white mb-3">
+                                  <Users className="h-4 w-4 text-violet-400" />
+                                  {request.volunteers.length} volunteer{request.volunteers.length !== 1 ? 's' : ''} responding
                                 </p>
-                                {request.user.phone_number && (
-                                  <p className="flex items-center">
-                                    <Phone className="w-4 h-4 mr-2 text-text-muted" />
-                                    {request.user.phone_number}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Volunteers */}
-                          {request.volunteers &&
-                            request.volunteers.length > 0 && (
-                              <div className="bg-gradient-to-r from-accent-teal/10 to-transparent border-l-4 border-accent-teal rounded-r-xl p-4 mt-4">
-                                <p className="text-sm font-bold text-text-primary flex items-center gap-2 mb-3">
-                                  <Users className="w-4 h-4 text-accent-teal" />
-                                  Active Responders ({request.volunteers.length}
-                                  )
-                                </p>
-                                <div className="space-y-2">
-                                  {request.volunteers.map((volunteer) => (
+                                <div className="flex flex-wrap gap-2">
+                                  {request.volunteers.slice(0, 3).map((volunteer) => (
                                     <div
                                       key={volunteer.id}
-                                      className="bg-glass-01 border border-glass-border rounded-lg p-3"
+                                      className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-white"
                                     >
-                                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                        <div>
-                                          <p className="font-bold text-text-primary text-sm flex items-center gap-2">
-                                            {volunteer.username}
-                                            <Badge
-                                              variant="outline"
-                                              className="text-[10px] h-4 bg-accent-teal/10 text-accent-teal border-accent-teal/20"
-                                            >
-                                              VERIFIED
-                                            </Badge>
-                                          </p>
-                                          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-text-muted mt-1.5">
-                                            <p className="flex items-center">
-                                              <Mail className="w-3 h-3 mr-1.5" />
-                                              {volunteer.email}
-                                            </p>
-                                            {volunteer.phone_number && (
-                                              <p className="flex items-center">
-                                                <Phone className="w-3 h-3 mr-1.5" />
-                                                {volunteer.phone_number}
-                                              </p>
-                                            )}
-                                          </div>
-                                        </div>
-                                        {volunteer.applied_at && (
-                                          <div className="text-xs font-mono text-text-muted">
-                                            Match TS:{" "}
-                                            {new Date(
-                                              volunteer.applied_at,
-                                            ).toLocaleTimeString([], {
-                                              hour: "2-digit",
-                                              minute: "2-digit",
-                                            })}
-                                          </div>
-                                        )}
-                                      </div>
+                                      <User className="h-3 w-3" />
+                                      {volunteer.username}
                                     </div>
                                   ))}
+                                  {request.volunteers.length > 3 && (
+                                    <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-text-secondary">
+                                      +{request.volunteers.length - 3} more
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             )}
-                        </div>
-
-                        {/* Actions Col */}
-                        <div className="flex md:flex-col gap-3 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-glass-border md:pl-6 justify-between md:justify-start">
-                          <div className="text-center md:text-right w-full mb-2 hidden md:block">
-                            <Badge className="bg-glass-02 text-text-primary border-glass-border">
-                              ACTIVE
-                            </Badge>
                           </div>
 
-                          <Button
-                            variant="outline"
-                            className="bg-transparent border-glass-border-strong text-text-primary hover:bg-glass-02 flex-1 md:flex-none"
-                            onClick={() =>
-                              (window.location.href = `/request-help?id=${request.id}`)
-                            }
-                          >
-                            Edit Beacon
-                          </Button>
-
-                          <Button
-                            onClick={() => deleteRequest(request.id)}
-                            variant="ghost"
-                            className="bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-white border border-accent-red/20 flex-1 md:flex-none"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Deactivate
-                          </Button>
+                          <div className="flex flex-row lg:flex-col gap-2 lg:w-32">
+                            <Button
+                              variant="outline"
+                              className="flex-1 bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-xl"
+                              onClick={() => router.push(`/request-help?id=${request.id}`)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              className="flex-1 bg-red-500/20 text-red-400 hover:bg-red-500/30 border-red-500/30 rounded-xl"
+                              onClick={() => deleteRequest(request.id)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+
+                        {request.photo && (
+                          <div className="mt-4 overflow-hidden rounded-xl border border-white/10">
+                            <img
+                              src={`${API_BASE_URL}/uploads/${request.photo}`}
+                              alt="Request evidence"
+                              className="h-48 w-full object-cover"
+                            />
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
             )}
-          </div>
+          </motion.section>
         </div>
-      </div>
+      </motion.main>
     </div>
   );
 }

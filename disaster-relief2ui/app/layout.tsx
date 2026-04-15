@@ -1,21 +1,21 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { SOSEmergencyButton } from "@/components/sos-emergency"
 
-const fontSyne = Syne({
+const fontInterDisplay = Inter({
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: ["600", "700", "800"],
   variable: "--font-display"
 })
 
-const fontDMSans = DM_Sans({
+const fontInterBody = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-body"
 })
 
@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${fontSyne.variable} ${fontDMSans.variable} ${fontJetBrains.variable} font-body bg-bg-base text-text-primary antialiased`}>
+      <body className={`${fontInterDisplay.variable} ${fontInterBody.variable} ${fontJetBrains.variable} font-body bg-bg-base text-text-primary antialiased`}>
         <ErrorBoundary>
           <AuthProvider>
             {children}
