@@ -24,7 +24,7 @@ import { Navigation } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { EtherealShadow } from "@/components/ui/ethereal-shadow";
+import Beams from "@/components/ui/beams";
 
 interface HelpRequest {
   id: number;
@@ -103,7 +103,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.1, 0.25, 1],
+      ease: "easeOut",
     },
   },
 };
@@ -192,14 +192,22 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black text-white">
-      {/* Ethereal background */}
-      <EtherealShadow
-        color1="rgba(139, 92, 246, 0.12)"
-        color2="rgba(59, 130, 246, 0.08)"
-        color3="rgba(16, 185, 129, 0.06)"
-        speed={0.8}
-      />
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* Beams Background */}
+      <div className="fixed inset-0 z-0">
+        <Beams
+          beamWidth={2}
+          beamHeight={20}
+          beamNumber={10}
+          lightColor="#3b82f6"
+          speed={1.5}
+          noiseIntensity={1.5}
+          scale={0.15}
+          rotation={0}
+        />
+        {/* Overlay gradient for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80" />
+      </div>
 
       <Navigation />
 
@@ -211,10 +219,10 @@ export default function Dashboard() {
       >
         <div className="mx-auto max-w-7xl">
           {/* Hero Section */}
-          <motion.section variants={itemVariants} className="mb-12">
-            <div className="glass-card rounded-3xl p-8 md:p-12 overflow-hidden relative">
+          <motion.section variants={itemVariants} className="mb-10">
+            <div className="glass-card rounded-3xl p-8 md:p-10 overflow-hidden relative">
               {/* Background glow */}
-              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-500/20 to-purple-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
               
               <div className="relative z-10">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -223,7 +231,7 @@ export default function Dashboard() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
-                      className="font-mono text-sm uppercase tracking-widest text-text-accent mb-2"
+                      className="font-mono text-sm uppercase tracking-widest text-blue-400 mb-2"
                     >
                       Dashboard
                     </motion.p>
@@ -239,11 +247,12 @@ export default function Dashboard() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
-                      className="mt-3 text-text-secondary max-w-lg"
+                      className="mt-3 text-text-secondary max-w-xl"
                     >
                       Manage your requests, track volunteer responses, and coordinate relief efforts in real-time.
                     </motion.p>
                   </div>
+                  
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -251,7 +260,7 @@ export default function Dashboard() {
                   >
                     <Button
                       onClick={() => router.push("/request-help")}
-                      className="bg-white text-black hover:bg-white/90 px-6 py-3 rounded-full font-medium"
+                      className="bg-white text-black hover:bg-white/90 rounded-full px-6"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       New Request
@@ -271,7 +280,7 @@ export default function Dashboard() {
                     { label: "Volunteers", value: requests.reduce((acc, r) => acc + (r.volunteers?.length || 0), 0), icon: <Users className="h-4 w-4" /> },
                     { label: "High Priority", value: requests.filter(r => r.urgency_level === "high").length, icon: <Zap className="h-4 w-4" /> },
                     { label: "Resolved", value: 0, icon: <Heart className="h-4 w-4" /> },
-                  ].map((stat, index) => (
+                  ].map((stat) => (
                     <div key={stat.label} className="glass-card rounded-2xl p-4 text-center">
                       <div className="flex items-center justify-center gap-2 mb-2 text-text-secondary">
                         {stat.icon}
@@ -286,7 +295,7 @@ export default function Dashboard() {
           </motion.section>
 
           {/* Action Cards */}
-          <motion.section variants={itemVariants} className="mb-12">
+          <motion.section variants={itemVariants} className="mb-10">
             <h2 className="font-display text-xl font-semibold text-white mb-6 flex items-center gap-2">
               Quick Actions
               <ArrowRight className="h-5 w-5 text-text-secondary" />
@@ -340,7 +349,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/request-help")}
-                className="border-white/10 bg-white/5 hover:bg-white/10 text-white"
+                className="border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 New Request
@@ -355,8 +364,8 @@ export default function Dashboard() {
             ) : requests.length === 0 ? (
               <Card className="glass-card border-white/5 rounded-2xl overflow-hidden">
                 <CardContent className="p-12 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/20 to-purple-500/20 mb-6">
-                    <AlertCircle className="h-8 w-8 text-violet-400" />
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 mb-6">
+                    <AlertCircle className="h-8 w-8 text-blue-400" />
                   </div>
                   <h3 className="font-display text-2xl font-semibold text-white mb-2">
                     No requests yet
@@ -366,7 +375,7 @@ export default function Dashboard() {
                   </p>
                   <Button
                     onClick={() => router.push("/request-help")}
-                    className="bg-white text-black hover:bg-white/90"
+                    className="bg-white text-black hover:bg-white/90 rounded-full"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Create your first request
@@ -390,15 +399,13 @@ export default function Dashboard() {
                               <h3 className="font-display text-xl font-semibold text-white">
                                 {request.title}
                               </h3>
-                              <Badge
-                                className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                  request.urgency_level === "high"
-                                    ? "bg-red-500/20 text-red-400 border-red-500/30"
-                                    : request.urgency_level === "medium"
-                                    ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
-                                    : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                                }`}
-                              >
+                              <Badge className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                request.urgency_level === "high"
+                                  ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                  : request.urgency_level === "medium"
+                                  ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                  : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                              }`}>
                                 {request.urgency_level} priority
                               </Badge>
                             </div>
@@ -443,9 +450,9 @@ export default function Dashboard() {
                             )}
 
                             {request.volunteers && request.volunteers.length > 0 && (
-                              <div className="rounded-xl bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 p-4">
+                              <div className="rounded-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 p-4">
                                 <p className="flex items-center gap-2 text-sm font-medium text-white mb-3">
-                                  <Users className="h-4 w-4 text-violet-400" />
+                                  <Users className="h-4 w-4 text-blue-400" />
                                   {request.volunteers.length} volunteer{request.volunteers.length !== 1 ? 's' : ''} responding
                                 </p>
                                 <div className="flex flex-wrap gap-2">
